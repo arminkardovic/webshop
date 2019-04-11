@@ -21,6 +21,7 @@ return [
 	'attributes_tab'            => 'Attributes',
 	'product_images_tab'        => 'Product Images',
 	'group_tab'                 => 'Group',
+    'product_prices_tab'        => 'Product prices',
 
 	// Clone product
 	'clone'                     => 'Clone',

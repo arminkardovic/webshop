@@ -30,7 +30,7 @@ class AttributeSetCrudController extends CrudController
         */
         $this->crud->addColumns([
             [
-                'name'  => 'name',
+                'name' => 'name',
                 'label' => trans('attribute.name'),
             ]
         ]);
@@ -91,18 +91,18 @@ class AttributeSetCrudController extends CrudController
     {
         $this->crud->addFields([
             [
-                'name'      => 'name',
-                'label'     => trans('attribute.name'),
-                'type'      => 'text',
+                'name' => 'name',
+                'label' => trans('attribute.name'),
+                'type' => 'text',
             ],
             [
-                'type'      => 'select2_multiple',
-                'label'     => trans('attribute.attributes'),
-                'name'      => 'attributes',
-                'entity'    => 'attributes',
+                'type' => 'select2_multiple',
+                'label' => trans('attribute.attributes'),
+                'name' => 'attributes',
+                'entity' => 'attributes',
                 'attribute' => 'name',
-                'model'     => "App\Models\Attribute",
-                'pivot'     => true,
+                'model' => "App\Models\Attribute",
+                'pivot' => true,
             ]
         ]);
     }
@@ -125,17 +125,56 @@ class AttributeSetCrudController extends CrudController
         return view('renders.product_attributes', compact('attributes', 'old'));
     }
 
-	public function store(StoreRequest $request)
-	{
+    public function ajaxGetAttributesCombinations(Request $request, Attribute $attribute)
+    {
+
+        $attributes = $attribute->with('values')->whereHas('sets', function ($q) use ($request) {
+            $q->where('id', $request->setId);
+        })->get();
+
+        $numberOfCombinations = 1;
+
+        foreach ($attributes as $attribute) {
+            $numberOfCombinations *= count($attribute->values);
+        }
+
+
+        $combinations = array();
+        for ($i = 0; $i < $numberOfCombinations; $i++) {
+            $combinations[$i] = array();
+        }
+
+
+        $order = 0;
+
+        $repeatCount = $numberOfCombinations;
+
+        foreach ($attributes as $attribute) {
+
+            $repeatCount = $repeatCount / count($attribute->values);
+
+            for ($i = 0; $i < $numberOfCombinations; $i++) {
+                $valueIndex = (int) floor(($i / $repeatCount) % count($attribute->values));
+                $combinations[$i][$order] = $attribute->values->toArray()[$valueIndex];
+            }
+
+            $order++;
+        }
+
+        return view('renders.product_prices', compact('combinations', 'attributes'));
+    }
+
+    public function store(StoreRequest $request)
+    {
         $redirect_location = parent::storeCrud();
 
         return $redirect_location;
-	}
+    }
 
-	public function update(UpdateRequest $request)
-	{
+    public function update(UpdateRequest $request)
+    {
         $redirect_location = parent::updateCrud();
 
         return $redirect_location;
-	}
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\ProductGroup;
 use App\Models\ProductImage;
 use App\Models\Tax;
 use App\Models\SpecificPrice;
+use App\ProductPrice;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -366,6 +367,14 @@ class ProductCrudController extends CrudController
 
         ]);
 
+        $this->crud->addField([
+                'name' => 'product_prices',
+                'label' => 'Product prices',
+                'type' => 'product_prices',
+                'tab' => trans('product.product_prices_tab'),
+            ]
+        );
+
     }
 
     public function ajaxUploadProductImages(Request $request, Product $product)
@@ -453,6 +462,17 @@ class ProductCrudController extends CrudController
                     $this->crud->entry->attributes()->attach([$key => ['value' => $attr_value]]);
                 }
             }
+        }
+
+        $productPrices = json_decode($request->get('productPricesField'));
+
+        foreach ($productPrices as $productPrice) {
+            $product = new ProductPrice([
+                'stock' => $productPrice->stock,
+                'price' => $productPrice->price,
+                'attributes' => json_encode($productPrice->attributeValuesIds)
+            ]);
+            $product->save();
         }
 
         $productId = $this->crud->entry->id;
