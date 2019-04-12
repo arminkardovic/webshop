@@ -8,6 +8,10 @@
 
 // Admin Interface
 
+Route::post('attribute-sets/list-attribute-combinations', ['as' => 'getAttrCombinationsBySetId', 'uses' => 'AttributeSetCrudController@ajaxGetAttributesCombinations']);
+Route::post('products/create-prices-table', ['as' => 'getCreateProductPricesTable', 'uses' => 'ProductCrudController@getCreateProductPricesTable']);
+Route::post('products/update-prices-table', ['as' => 'getUpdateProductPricesTable', 'uses' => 'ProductCrudController@getUpdateProductPricesTable']);
+
 CRUD::resource('categories', 'CategoryCrudController');
 CRUD::resource('currencies', 'CurrencyCrudController');
 CRUD::resource('carriers', 'CarrierCrudController');

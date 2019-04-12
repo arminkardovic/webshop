@@ -17,8 +17,10 @@ class CategoryController extends BaseController
     public function index(Request $request, $category)
     {
         $category = Category::where("slug", "=", $category)->first();
+        $products = $category->products()->paginate();
         return view("web.category.index", [
-            "category" => $category
+            "category" => $category,
+            "products" => $products
         ]);
     }
 }

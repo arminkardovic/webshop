@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -20,18 +21,20 @@ class Product extends Model
     // public $timestamps = false;
     // protected $guarded = ['id'];
     protected $fillable = [
-    	'group_id',
-    	'attribute_set_id',
-    	'name',
-    	'description',
-    	'price',
-    	'tax_id',
-    	'sku',
-    	'stock',
-    	'active',
-    	'created_at',
-    	'updated_at'
-	];
+        'group_id',
+        'attribute_set_id',
+        'name',
+        'description',
+        'price',
+        'tax_id',
+        'sku',
+        'stock',
+        'active',
+        'created_at',
+        'updated_at'
+    ];
+
+    protected $with = ["images"];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -40,11 +43,11 @@ class Product extends Model
 	| EVENTS
 	|--------------------------------------------------------------------------
 	*/
-	protected static function boot()
+    protected static function boot()
     {
         parent::boot();
 
-        static::deleting(function($model) {
+        static::deleting(function ($model) {
             $model->categories()->detach();
             $model->attributes()->detach();
 
@@ -75,25 +78,25 @@ class Product extends Model
 	|--------------------------------------------------------------------------
 	*/
 
-	public function categories()
-	{
-		return $this->belongsToMany('App\Models\Category');
-	}
+    public function categories()
+    {
+        return $this->belongsToMany('App\Models\Category');
+    }
 
-	public function attributes()
-	{
-		return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')->withPivot('value');
-	}
+    public function attributes()
+    {
+        return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')->withPivot('value');
+    }
 
-	public function tax()
-	{
-		return $this->hasOne('App\Models\Tax');
-	}
+    public function tax()
+    {
+        return $this->hasOne('App\Models\Tax');
+    }
 
-	public function images()
-	{
-		return $this->hasMany('App\Models\ProductImage')->orderBy('order', 'ASC');
-	}
+    public function images()
+    {
+        return $this->hasMany('App\Models\ProductImage')->orderBy('order', 'ASC');
+    }
 
     public function group()
     {
@@ -114,6 +117,25 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductPrice', 'product_id', 'id');
 
+    }
+
+
+    public function getFeatureImageAttribute()
+    {
+        $image = $this->images()->first();
+        if ($image) {
+            $disk = 'products';
+            if (Storage::disk($disk)->has($image->name)) {
+                return Storage::disk($disk)->url($image->name);
+            }
+        }
+        return "";
+    }
+
+
+    public function getFormattedPriceAttribute()
+    {
+        return decimalFormat($this->price) . " €";
     }
 
     /*

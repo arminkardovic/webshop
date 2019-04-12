@@ -2,7 +2,7 @@
 
 Route::get('/', "IndexController@index");
 
-
+Route::get('/product/{id}', "ProductController@index")->name("product.single");
 Route::get('/{category}', "CategoryController@index");
 
 Route::get('{category}/{page}', function ($category = null, $page = null) {

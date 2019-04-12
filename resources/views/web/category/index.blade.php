@@ -2,6 +2,6 @@
 
 @section("content")
 
-
+@include("web.category.products")
 
 @endsection

@@ -20,13 +20,13 @@ class Category extends Model
     public $timestamps = false;
     // protected $guarded = ['id'];
     protected $fillable = [
-    	'parent_id',
-    	'name',
-    	'slug',
-    	'lft',
-    	'rgt',
-    	'depth'
-	];
+        'parent_id',
+        'name',
+        'slug',
+        'lft',
+        'rgt',
+        'depth'
+    ];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -42,7 +42,7 @@ class Category extends Model
 	|--------------------------------------------------------------------------
 	*/
 
-	public function parent()
+    public function parent()
     {
         return $this->belongsTo('App\Models\Category', 'parent_id');
     }
@@ -50,6 +50,11 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany('App\Models\Category', 'parent_id');
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany('App\Models\Product');
     }
 
     public function cartRules()

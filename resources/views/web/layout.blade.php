@@ -12,6 +12,7 @@
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/slick.css">
     <link rel="stylesheet" href="/css/style.css">
 
     <!--[if lt IE 9]>
@@ -28,6 +29,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+
 </body>
 </html>

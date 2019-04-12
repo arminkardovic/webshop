@@ -43,10 +43,8 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapAdminRoutes()
     {
-
         Route::namespace($this->namespace . '\Admin')
             ->prefix('admin')
-            ->name('admin.')
             ->middleware(['web', 'admin'])
             ->group(function () {
                 require base_path('routes/admin.php');
@@ -54,7 +52,6 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::namespace($this->namespace . '\Admin')
             ->prefix('ajax')
-            ->name('admin.')
             ->middleware(['web', 'admin'])
             ->group(function () {
                 require base_path('routes/ajax.php');

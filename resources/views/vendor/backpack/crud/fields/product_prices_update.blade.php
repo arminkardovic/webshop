@@ -67,7 +67,7 @@
                 .done(function (response) {
                     $("#product_prices_table").html(response);
                     bindPricesChangeEvent();
-                    if(firstTime == true) {
+                    if (firstTime == true) {
                         generatePricesField();
                         firstTime = false;
                     }
