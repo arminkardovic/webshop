@@ -22,6 +22,18 @@ class AttributeAttributeSetTableSeeder extends Seeder
                 'attribute_id'      => 2,
                 'attribute_set_id' => 1,
     		],
+            [
+                'attribute_id'      => 1,
+                'attribute_set_id' => 2,
+            ],
+            [
+                'attribute_id'      => 2,
+                'attribute_set_id' => 2,
+            ],
+            [
+                'attribute_id'      => 3,
+                'attribute_set_id' => 2,
+            ]
     	];
 
     	DB::table('attribute_attribute_set')->insert($attributeAttributeSet);

@@ -23,9 +23,6 @@ class CreateProductsTable extends Migration
             $table->integer('tax_id')->unsigned();
             $table->decimal('price', 13, 2)->nullable()->default(null);
 
-            $table->decimal('price_usd', 13, 2)->nullable()->default(null);
-            $table->decimal('price_rsd', 13, 2)->nullable()->default(null);
-
             $table->string('sku', 100)->nullable()->default(null);
             $table->integer('stock')->nullable()->default('0');
             $table->tinyInteger('active')->default('0');

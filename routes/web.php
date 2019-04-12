@@ -41,11 +41,15 @@ Route::group(['middleware' => 'admin',
 ], function() {
 	// Get attributes by set id
 	Route::post('attribute-sets/list-attributes', ['as' => 'getAttrBySetId', 'uses' => 'AttributeSetCrudController@ajaxGetAttributesBySetId']);
-    Route::post('attribute-sets/list-attribute-combinations', ['as' => 'getAttrCombinationsBySetId', 'uses' => 'AttributeSetCrudController@ajaxGetAttributesCombinations']);
+
 	// Product images upload routes
 	Route::post('product/image/upload', ['as' => 'uploadProductImages', 'uses' => 'ProductCrudController@ajaxUploadProductImages']);
 	Route::post('product/image/reorder', ['as' => 'reorderProductImages', 'uses' => 'ProductCrudController@ajaxReorderProductImages']);
 	Route::post('product/image/delete', ['as' => 'deleteProductImage', 'uses' => 'ProductCrudController@ajaxDeleteProductImage']);
+
+    //product prices routes
+    Route::post('products/create-prices-table', ['as' => 'getCreateProductPricesTable', 'uses' => 'ProductCrudController@getCreateProductPricesTable']);
+    Route::post('products/update-prices-table', ['as' => 'getUpdateProductPricesTable', 'uses' => 'ProductCrudController@getUpdateProductPricesTable']);
 
 	// Get group products by group id
 	Route::post('product-group/list/products', ['as' => 'getGroupProducts', 'uses' => 'ProductGroupController@getGroupProducts']);

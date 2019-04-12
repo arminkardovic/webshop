@@ -15,10 +15,16 @@ class CreateProductPricesTable extends Migration
     {
         Schema::create('product_prices', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('product_id')->unsigned();
             $table->integer('stock');
             $table->decimal('price', 6, 2);
-            $table->text('attributes');
+            $table->json('attributes');
             $table->timestamps();
+
+            $table->foreign('product_id')
+                ->references('id')->on('products')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 

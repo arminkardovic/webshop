@@ -125,44 +125,6 @@ class AttributeSetCrudController extends CrudController
         return view('renders.product_attributes', compact('attributes', 'old'));
     }
 
-    public function ajaxGetAttributesCombinations(Request $request, Attribute $attribute)
-    {
-
-        $attributes = $attribute->with('values')->whereHas('sets', function ($q) use ($request) {
-            $q->where('id', $request->setId);
-        })->get();
-
-        $numberOfCombinations = 1;
-
-        foreach ($attributes as $attribute) {
-            $numberOfCombinations *= count($attribute->values);
-        }
-
-
-        $combinations = array();
-        for ($i = 0; $i < $numberOfCombinations; $i++) {
-            $combinations[$i] = array();
-        }
-
-
-        $order = 0;
-
-        $repeatCount = $numberOfCombinations;
-
-        foreach ($attributes as $attribute) {
-
-            $repeatCount = $repeatCount / count($attribute->values);
-
-            for ($i = 0; $i < $numberOfCombinations; $i++) {
-                $valueIndex = (int) floor(($i / $repeatCount) % count($attribute->values));
-                $combinations[$i][$order] = $attribute->values->toArray()[$valueIndex];
-            }
-
-            $order++;
-        }
-
-        return view('renders.product_prices', compact('combinations', 'attributes'));
-    }
 
     public function store(StoreRequest $request)
     {

@@ -10,7 +10,7 @@ use App\Models\ProductGroup;
 use App\Models\ProductImage;
 use App\Models\Tax;
 use App\Models\SpecificPrice;
-use App\ProductPrice;
+use App\Models\ProductPrice;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -161,8 +161,13 @@ class ProductCrudController extends CrudController
                 'name' => 'description',
                 'label' => trans('product.description'),
                 // 'type'  => 'ckeditor',
-                'type' => 'text',
-
+                'type' => 'ckeditor',
+                // optional:
+                'options' => [
+                    'autoGrow_minHeight' => 200,
+                    'autoGrow_bottomSpace' => 50,
+                    'removePlugins' => 'resize,maximize',
+                ],
                 // TAB
                 'tab' => trans('product.general_tab'),
             ],
@@ -193,30 +198,6 @@ class ProductCrudController extends CrudController
             [
                 'name' => 'price_with_vat',
                 'label' => trans('product.price'),
-                'type' => 'number',
-                'attributes' => [
-                    'step' => 'any',
-                ],
-
-                // TAB
-                'tab' => trans('product.price_tab'),
-            ],
-
-            [
-                'name' => 'price_usd',
-                'label' => trans('product.price_usd'),
-                'type' => 'number',
-                'attributes' => [
-                    'step' => 'any',
-                ],
-
-                // TAB
-                'tab' => trans('product.price_tab'),
-            ],
-
-            [
-                'name' => 'price_rsd',
-                'label' => trans('product.price_rsd'),
                 'type' => 'number',
                 'attributes' => [
                     'step' => 'any',
@@ -368,11 +349,19 @@ class ProductCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-                'name' => 'product_prices',
-                'label' => 'Product prices',
-                'type' => 'product_prices',
-                'tab' => trans('product.product_prices_tab'),
-            ]
+            'name' => 'product_prices',
+            'label' => 'Product prices',
+            'type' => 'product_prices_create',
+            'tab' => trans('product.product_prices_tab'),
+        ], 'create'
+        );
+
+        $this->crud->addField([
+            'name' => 'product_prices',
+            'label' => 'Product prices',
+            'type' => 'product_prices_update',
+            'tab' => trans('product.product_prices_tab'),
+        ], 'update'
         );
 
     }
@@ -464,18 +453,33 @@ class ProductCrudController extends CrudController
             }
         }
 
-        $productPrices = json_decode($request->get('productPricesField'));
-
-        foreach ($productPrices as $productPrice) {
-            $product = new ProductPrice([
-                'stock' => $productPrice->stock,
-                'price' => $productPrice->price,
-                'attributes' => json_encode($productPrice->attributeValuesIds)
-            ]);
-            $product->save();
-        }
 
         $productId = $this->crud->entry->id;
+
+
+        //insert product prices
+        $productPrices = json_decode($request->get('productPricesField'));
+        $product = Product::find($productId); /** @var Product $product */
+
+
+        $sku = sprintf('%01d', $product->categories[0]->id);
+        $sku .= sprintf('%02d', $product->categories[0]->id);
+        $sku .= sprintf('%04d', $product->id);
+        $sku .= '0000';
+        $product->sku = $sku;
+        $product->save();
+
+        foreach ($productPrices as $productPrice) {
+            sort($productPrice->attributeValuesIds);
+            $productPriceToSave = new ProductPrice([
+                'product_id' => $productId,
+                'stock' => $productPrice->stock,
+                'price' => $productPrice->price,
+                'attributes' => $productPrice->attributeValuesIds
+            ]);
+            $productPriceToSave->save();
+        }
+
         $reduction = $request->input('reduction');
         $discountType = $request->input('discount_type');
         $startDate = $request->input('start_date');
@@ -488,7 +492,6 @@ class ProductCrudController extends CrudController
 
         // Check if a specific price reduction doesn't already exist in this period
         if (!$this->validateProductDates($productId, $startDate, $expirationDate)) {
-            $product = Product::find($productId);
             $productName = $product->name;
 
             \Alert::error(trans('specificprice.wrong_dates', ['productName' => $productName]))->flash();
@@ -519,11 +522,29 @@ class ProductCrudController extends CrudController
     public function update(UpdateRequest $request, Attribute $attribute, Product $product)
     {
         // Get current product data
-        $product = $product->findOrFail($this->crud->request->id);
+        $id = $this->crud->request->id;
+        $product = $product->findOrFail($id);
 
         $redirect_location = parent::updateCrud($request);
 
         // Add product attributes ids and values in attribute_product_value (pivot)
+
+        //update product prices
+        ProductPrice::where("product_id", "=", $id)->delete();
+        $productPrices = json_decode($request->get('productPricesField'));
+
+        foreach ($productPrices as $productPrice) {
+            sort($productPrice->attributeValuesIds);
+            $product = new ProductPrice([
+                'product_id' => $id,
+                'stock' => $productPrice->stock,
+                'price' => $productPrice->price,
+                'attributes' => $productPrice->attributeValuesIds
+            ]);
+            $product->save();
+        }
+
+
         if ($request->input('attributes')) {
 
             // Set attributes upload disk
@@ -773,6 +794,111 @@ class ProductCrudController extends CrudController
         return true;
     }
 
+    public function getCreateProductPricesTable(Request $request, Attribute $attribute)
+    {
+
+        $attributes = $attribute->with('values')->whereHas('sets', function ($q) use ($request) {
+            $q->where('id', $request->setId);
+        })->get();
+
+        $numberOfCombinations = 1;
+
+        foreach ($attributes as $attribute) {
+            $numberOfCombinations *= count($attribute->values);
+        }
+
+
+        $combinations = array();
+        for ($i = 0; $i < $numberOfCombinations; $i++) {
+            $combinations[$i] = array();
+        }
+
+
+        $order = 0;
+
+        $repeatCount = $numberOfCombinations;
+
+        foreach ($attributes as $attribute) {
+
+            $repeatCount = $repeatCount / count($attribute->values);
+
+            for ($i = 0; $i < $numberOfCombinations; $i++) {
+                $valueIndex = (int)floor(($i / $repeatCount) % count($attribute->values));
+                $combinations[$i][$order] = $attribute->values->toArray()[$valueIndex];
+            }
+
+            $order++;
+        }
+
+        return view('renders.product_create_prices', compact('combinations', 'attributes'));
+    }
+
+    public function getUpdateProductPricesTable(Request $request, Attribute $attribute)
+    {
+
+        $attributes = $attribute->with('values')->whereHas('sets', function ($q) use ($request) {
+            $q->where('id', $request->setId);
+        })->get();
+
+        $numberOfCombinations = 1;
+
+        foreach ($attributes as $attribute) {
+            $numberOfCombinations *= count($attribute->values);
+        }
+
+
+        $combinations = array();
+        for ($i = 0; $i < $numberOfCombinations; $i++) {
+            $combinations[$i] = new \stdClass();
+            $combinations[$i]->combinations = array();
+            $combinations[$i]->stock = 0;
+            $combinations[$i]->price = 0;
+        }
+
+
+        $order = 0;
+
+        $repeatCount = $numberOfCombinations;
+
+
+        $product = Product::findOrFail($request->get('productId'));
+        /** @var Product $product */
+
+        if ($product->attribute_set_id != $request->setId) {
+            $oldPrices = $product->prices;
+        }
+
+
+        foreach ($attributes as $attribute) {
+
+            $repeatCount = $repeatCount / count($attribute->values);
+
+            for ($i = 0; $i < $numberOfCombinations; $i++) {
+                $valueIndex = (int)floor(($i / $repeatCount) % count($attribute->values));
+                $combinations[$i]->combinations[$order] = $attribute->values->toArray()[$valueIndex];
+
+                if ($product->attribute_set_id != $request->setId) {
+
+                    foreach ($oldPrices as $oldPrice) {
+                        /** @var ProductPrice $oldPrice */
+                        $combinationIds = array();
+                        foreach ($combinations[$i]->combinations as $combination) {
+                            $combinationIds[] = $combination['id'];
+                        }
+
+                        if (!array_diff($oldPrice->attributes, $combinationIds) && !array_diff($combinationIds, $oldPrice->attributes)) {
+                            $combinations[$i]->stock = $oldPrice->stock;
+                            $combinations[$i]->price = $oldPrice->price;
+                        }
+                    }
+                }
+            }
+
+            $order++;
+        }
+
+        return view('renders.product_update_prices', compact('combinations', 'attributes'));
+    }
 }
 
 
