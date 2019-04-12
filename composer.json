@@ -11,7 +11,9 @@
         "backpack/crud": "^3.3.0",
         "backpack/settings": "^2.0",
         "backpack/permissionmanager": "^2.1",
-        "laravel/socialite": "3.2"
+        "laravel/socialite": "3.2",
+        "backpack/menucrud": "^1.0",
+        "backpack/pagemanager": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

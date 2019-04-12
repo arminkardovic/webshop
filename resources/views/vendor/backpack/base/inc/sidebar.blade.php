@@ -90,6 +90,9 @@
           @endcan
                     -->
 
+                <li><a href="{{ url(config('backpack.base.route_prefix').'/page') }}"><i class="fa fa-file-o"></i> <span>Pages</span></a></li>
+
+                <li><a href="{{ backpack_url('menu-item') }}"><i class="fa fa-list"></i> <span>Menu</span></a></li>
                 @can('list_notification_templates')
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/notification-templates') }}"><i
                                     class="fa fa-list"></i>

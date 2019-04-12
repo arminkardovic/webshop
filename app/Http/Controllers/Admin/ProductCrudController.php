@@ -465,16 +465,17 @@ class ProductCrudController extends CrudController
         }
 
         $productPrices = json_decode($request->get('productPricesField'));
-
-        foreach ($productPrices as $productPrice) {
-            $product = new ProductPrice([
-                'stock' => $productPrice->stock,
-                'price' => $productPrice->price,
-                'attributes' => json_encode($productPrice->attributeValuesIds)
-            ]);
-            $product->save();
+        if (is_array($productPrices)) {
+            foreach ($productPrices as $productPrice) {
+                $product = new ProductPrice([
+                    'stock' => $productPrice->stock,
+                    'price' => $productPrice->price,
+                    'attributes' => json_encode($productPrice->attributeValuesIds)
+                ]);
+                $product->save();
+            }
         }
-
+        
         $productId = $this->crud->entry->id;
         $reduction = $request->input('reduction');
         $discountType = $request->input('discount_type');
