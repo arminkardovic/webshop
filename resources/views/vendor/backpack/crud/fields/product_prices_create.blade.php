@@ -11,10 +11,14 @@
 
     <script>
         $(document).ready(function () {
-            $('#attributes-set').select2({
+            var attributesSetSelect = $('#attributes-set');
+
+            getAttributesCreateTable(attributesSetSelect.val());
+
+            attributesSetSelect.select2({
                 theme: "bootstrap"
             }).on("change", function (e) {
-                getAttributesTable($(this).val());
+                getAttributesCreateTable($(this).val());
             });
 
 
@@ -53,9 +57,9 @@
             });
         }
 
-        function getAttributesTable(setId) {
+        function getAttributesCreateTable(setId) {
             $.ajax({
-                url: "{{ route('getAttrCombinationsBySetId') }}",
+                url: "{{ route('getCreateProductPricesTable') }}",
                 type: 'POST',
                 data: {
                     setId: setId,

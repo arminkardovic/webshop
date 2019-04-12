@@ -23,7 +23,12 @@ class AttributesTableSeeder extends Seeder
 				'id'   => 2,
 				'type' => 'dropdown',
 				'name' => 'Size',
-    		]
+    		],
+            [
+                'id'   => 3,
+                'type' => 'dropdown',
+                'name' => 'Fit',
+            ]
     	];
 
     	DB::table('attributes')->insert($attributes);

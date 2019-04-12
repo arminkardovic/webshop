@@ -46,7 +46,14 @@ class AttributeValuesTableSeeder extends Seeder
 				'attribute_id' => 2,
 				'value'        => 'XL',
     		],
-
+            [
+                'attribute_id' => 3,
+                'value'        => 'SLIM',
+            ],
+            [
+                'attribute_id' => 3,
+                'value'        => 'COMFORT',
+            ],
     	];
 
     	DB::table('attribute_values')->insert($attributeValues);

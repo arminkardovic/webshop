@@ -13,8 +13,6 @@ return [
 	'hint_category'             => 'You can select one or more categories where the product will be displayed',
 	'sku'                       => 'SKU',
 	'stock'                     => 'Stock',
-	'price_usd'                 => 'Price USD',
-	'price_rsd'                 => 'Price RSD',
 
 	// Product Tabs
 	'general_tab'               => 'General',

@@ -17,6 +17,9 @@ class AttributeSetsTableSeeder extends Seeder
     		[
 				'name' => 'Clothes',
     		],
+            [
+                'name' => 'Footwear'
+            ]
     	];
 
     	DB::table('attribute_sets')->insert($attributeSets);

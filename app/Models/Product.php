@@ -25,8 +25,6 @@ class Product extends Model
     	'name',
     	'description',
     	'price',
-        'price_usd',
-        'price_rsd',
     	'tax_id',
     	'sku',
     	'stock',
@@ -112,7 +110,11 @@ class Product extends Model
         return $this->belongsTo('App\Models\SpecificPrice');
     }
 
+    public function prices()
+    {
+        return $this->hasMany('App\Models\ProductPrice', 'product_id', 'id');
 
+    }
 
     /*
     |--------------------------------------------------------------------------
