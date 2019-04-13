@@ -10,6 +10,7 @@
 @push('crud_fields_scripts')
 
     <script>
+        var firstTime = true;
         $(document).ready(function () {
             var attributesSetSelect = $('#attributes-set');
 
@@ -68,6 +69,10 @@
                 .done(function (response) {
                     $("#product_prices_table").html(response);
                     bindPricesChangeEvent();
+                    if (firstTime == true) {
+                        generatePricesField();
+                        firstTime = false;
+                    }
                 });
         }
     </script>

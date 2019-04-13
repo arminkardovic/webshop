@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ProductRequest as StoreRequest;
 use App\Http\Requests\ProductRequest as UpdateRequest;
 use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Product;
 use App\Models\ProductGroup;
 use App\Models\ProductImage;
@@ -46,14 +47,14 @@ class ProductCrudController extends CrudController
                 'name' => 'name',
                 'label' => trans('product.name'),
             ],
-            [
+            /*[
                 'type' => "select_multiple",
                 'label' => trans('category.categories'),
                 'name' => 'categories',
                 'entity' => 'categories',
                 'attribute' => "name",
                 'model' => "App\Models\Category",
-            ],
+            ],*/
             [
                 'name' => 'sku',
                 'label' => trans('product.sku'),
@@ -171,18 +172,18 @@ class ProductCrudController extends CrudController
                 // TAB
                 'tab' => trans('product.general_tab'),
             ],
-            [
-                'name' => 'categories',
-                'label' => trans('category.categories'),
-                'hint' => trans('product.hint_category'),
-                'type' => 'select2_multiple',
-                'entity' => 'categories',
-                'attribute' => 'name',
-                'model' => "App\Models\Category",
-                'pivot' => true,
 
-                // TAB
+            [
+                'label' => trans('category.category'),
+                'type' => "select2_from_ajax",
+                'name' => 'category_id', // the column that contains the ID of that connected entity
+                'entity' => 'category', // the method that defines the relationship in your Model
+                'attribute' => "name", // foreign key attribute that is shown to user
+                'model' => "App\Models\Category", // foreign key model
+                'data_source' => route("categories-ajax"), // url to controller search function (with /{id} should return model)
                 'tab' => trans('product.general_tab'),
+                'placeholder' => trans( 'product.hint_category'),
+                'minimum_input_length' => 0
             ],
             /** PRICE  */
 
@@ -349,8 +350,22 @@ class ProductCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'name' => 'subcategory_id',
+            'label' => trans('category.subcategory'),
+            'placeholder' => trans('category.select.subcategory'),
+            'minimum_input_length' => 0,
+            'type' => 'subcategory_create',
+            'attribute' => 'name',
+            'model_custom' => 'App\Models\Category',
+            'key_value' => "subcategory_id",
+            'old_value' => "id",
+            'data_source' => route('subcategories-ajax'),
+            'tab' => trans('product.general_tab')
+        ]);
+
+        $this->crud->addField([
             'name' => 'product_prices',
-            'label' => 'Product prices',
+            'label' => trans('product.prices'),
             'type' => 'product_prices_create',
             'tab' => trans('product.product_prices_tab'),
         ], 'create'
@@ -358,7 +373,7 @@ class ProductCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'product_prices',
-            'label' => 'Product prices',
+            'label' => trans('product.prices'),
             'type' => 'product_prices_update',
             'tab' => trans('product.product_prices_tab'),
         ], 'update'
@@ -431,6 +446,17 @@ class ProductCrudController extends CrudController
 
     public function store(StoreRequest $request, ProductGroup $productGroup, SpecificPrice $specificPrice)
     {
+;
+
+        $sizes = AttributeValue::query()->whereHas('attribute', function ($query) {
+            $query->where('name', '=', 'Size');
+        })->get();
+
+        $colors = AttributeValue::query()->whereHas('attribute', function ($query) {
+            $query->where('name', '=', 'Color');
+        })->get();
+
+
         // Create group entry
         $productGroup = $productGroup->create();
 
@@ -462,20 +488,39 @@ class ProductCrudController extends CrudController
         $product = Product::find($productId); /** @var Product $product */
 
 
-        $sku = sprintf('%01d', $product->categories[0]->id);
-        $sku .= sprintf('%02d', $product->categories[0]->id);
+        $sku = sprintf('%01d', $product->category_id);
+        $sku .= sprintf('%02d', $product->subcategory_id);
         $sku .= sprintf('%04d', $product->id);
-        $sku .= '0000';
-        $product->sku = $sku;
-        $product->save();
+
+
+
+
 
         foreach ($productPrices as $productPrice) {
+            $sizeCode = '00';
+            $colorCode = '00';
+
+            foreach ($productPrice->attributeValuesIds as $attributeValue) {
+                foreach ($colors as $color) {
+                    if($color->id == $attributeValue) {
+                        $colorCode = sprintf('%02d', $color->id);
+                    }
+                }
+
+                foreach ($sizes as $size) {
+                    if($size->id == $attributeValue) {
+                        $sizeCode = sprintf('%02d', $size->id);
+                    }
+                }
+            }
+
             sort($productPrice->attributeValuesIds);
             $productPriceToSave = new ProductPrice([
                 'product_id' => $productId,
                 'stock' => $productPrice->stock,
                 'price' => $productPrice->price,
-                'attributes' => $productPrice->attributeValuesIds
+                'attributes' => $productPrice->attributeValuesIds,
+                'sku' => $sku . $sizeCode . $colorCode
             ]);
             $productPriceToSave->save();
         }

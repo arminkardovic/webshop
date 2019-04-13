@@ -22,12 +22,13 @@ class Product extends Model
     // protected $guarded = ['id'];
     protected $fillable = [
         'group_id',
+        'category_id',
+        'subcategory_id',
         'attribute_set_id',
         'name',
         'description',
         'price',
         'tax_id',
-        'sku',
         'stock',
         'active',
         'created_at',
@@ -48,7 +49,6 @@ class Product extends Model
         parent::boot();
 
         static::deleting(function ($model) {
-            $model->categories()->detach();
             $model->attributes()->detach();
 
             // Delete product images
@@ -78,9 +78,14 @@ class Product extends Model
 	|--------------------------------------------------------------------------
 	*/
 
-    public function categories()
+    public function category()
     {
-        return $this->belongsToMany('App\Models\Category');
+        return $this->hasOne('App\Models\Category', 'category_id');
+    }
+
+    public function subcategory()
+    {
+        return $this->hasOne('App\Models\Category', 'subcategory_id');
     }
 
     public function attributes()
@@ -145,7 +150,7 @@ class Product extends Model
     */
     public function scopeLoadCloneRelations($query)
     {
-        $query->with('categories', 'attributes', 'images');
+        $query->with('category', 'subcategory', 'attributes', 'images');
     }
 
     public function scopeActive($query)

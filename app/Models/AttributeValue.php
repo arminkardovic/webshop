@@ -23,6 +23,12 @@ class AttributeValue extends Model
     	'attribute_id',
     	'value'
 	];
+
+    public function attribute()
+    {
+        return $this->hasOne('App\Models\Attribute', 'id', 'attribute_id');
+    }
+
     // protected $hidden = [];
     // protected $dates = [];
 

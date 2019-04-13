@@ -16,7 +16,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->integer('parent_id')->nullable()->default('0');
+            $table->integer('parent_id')->default('0');
             $table->string('name', 100)->nullable()->default(null);
             $table->string('slug', 100)->nullable()->default(null);
             $table->integer('lft')->default('0');

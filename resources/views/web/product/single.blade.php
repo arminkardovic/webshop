@@ -1,7 +1,6 @@
 @extends('web.layout')
 
 @section("content")
-
     <section class="product">
         <div class="container-fluid">
             <div class="row">
@@ -34,69 +33,24 @@
                     </span>
                     </p>
 
-                    <div class="size">
-                        <div id="size-label">Broj:</div>
-                        <div class="size-value">
+                    @foreach($attributes as $attribute)
 
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="options" id="option1" checked> 2
-                                </label>
+                        <div class="size">
+                            <div id="size-label">{{$attribute->name}}:</div>
+                            <div class="size-value">
 
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option2"> 4
-                                </label>
-
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option3"> 6
-                                </label>
-
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option4"> 8
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option5"> 10
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option6"> 12
-                                </label>
-
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option5"> 14
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option6"> 16
-                                </label>
+                                <div class="btn-group" data-toggle="buttons">
+                                    @foreach($attribute->values as $value)
+                                        <label class="btn btn-primary @if ($loop->first) active @endif">
+                                            <input type="radio" name="options" id="{{$value->id}}"> {{ $value->value }}
+                                        </label>
+                                    @endforeach
+                                </div>
 
                             </div>
 
                         </div>
-
-                    </div>
-
-                    <div class="color">
-                        <div id="color-label">Broj:</div>
-                        <div class="color-value">
-
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="options" id="option1" checked> crvena
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option2"> roza
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option3"> teget
-                                </label>
-
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option4"> zelena
-                                </label>
-
-                            </div>
-
-                        </div>
-                    </div>
+                    @endforeach
 
                     <form class="cart" method="post" enctype="multipart/form-data">
                         <div class="quantity">

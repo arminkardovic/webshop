@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxesTableSeeder::class);
         $this->call(ProductGroupsTableSeeder::class);
         $this->call(ProductsTableSeeder::class);
-        $this->call(CategoryProductTableSeeder::class);
         $this->call(AttributeProductValueTableSeeder::class);
 
         // Seed permissions

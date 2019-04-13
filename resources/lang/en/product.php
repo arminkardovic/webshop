@@ -10,7 +10,7 @@ return [
 	'price_without_vat'         => 'Price without VAT',
 	'price_with_tax'			=> 'Price with Tax',
 	'hint_price'                => 'Use dot (.) instead comma (,) for separating number decimals',
-	'hint_category'             => 'You can select one or more categories where the product will be displayed',
+	'hint_category'             => 'Select product category',
 	'sku'                       => 'SKU',
 	'stock'                     => 'Stock',
 
@@ -41,5 +41,7 @@ return [
 	'add_to_group'              => 'Add to group',
 	'group_is_required'         => 'Group is required',
 	'remove_from_group'         => 'Remove from group',
-	'remove_from_group_confirm' => 'Are you sure you want to remove this product from group?'
+	'remove_from_group_confirm' => 'Are you sure you want to remove this product from group?',
+
+    'prices'                    => 'Product prices'
 ];

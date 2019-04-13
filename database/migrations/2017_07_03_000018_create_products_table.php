@@ -17,13 +17,14 @@ class CreateProductsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('group_id')->unsigned();
+            $table->integer('category_id')->unsigned();
+            $table->integer('subcategory_id')->unsigned();
             $table->integer('attribute_set_id')->unsigned()->default('0');
             $table->string('name', 255)->nullable()->default(null);
             $table->longText('description')->nullable()->default(null);
             $table->integer('tax_id')->unsigned();
             $table->decimal('price', 13, 2)->nullable()->default(null);
 
-            $table->string('sku', 100)->nullable()->default(null);
             $table->integer('stock')->nullable()->default('0');
             $table->tinyInteger('active')->default('0');
             $table->nullableTimestamps();
@@ -43,6 +44,16 @@ class CreateProductsTable extends Migration
 
             $table->foreign('group_id')
                 ->references('id')->on('product_groups')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('category_id')
+                ->references('id')->on('categories')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('subcategory_id')
+                ->references('id')->on('categories')
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });
