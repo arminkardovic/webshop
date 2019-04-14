@@ -56,10 +56,6 @@ class ProductCrudController extends CrudController
                 'model' => "App\Models\Category",
             ],*/
             [
-                'name' => 'sku',
-                'label' => trans('product.sku'),
-            ],
-            [
                 'name' => 'price',
                 'label' => trans('product.price'),
             ],
@@ -159,6 +155,14 @@ class ProductCrudController extends CrudController
                 'tab' => trans('product.general_tab'),
             ],
             [
+                'name' => 'name_sr',
+                'label' => trans('product.name_sr'),
+                'type' => 'text',
+
+                // TAB
+                'tab' => trans('product.general_tab'),
+            ],
+            [
                 'name' => 'description',
                 'label' => trans('product.description'),
                 // 'type'  => 'ckeditor',
@@ -172,7 +176,20 @@ class ProductCrudController extends CrudController
                 // TAB
                 'tab' => trans('product.general_tab'),
             ],
-
+            [
+                'name' => 'description_sr',
+                'label' => trans('product.description_sr'),
+                // 'type'  => 'ckeditor',
+                'type' => 'ckeditor',
+                // optional:
+                'options' => [
+                    'autoGrow_minHeight' => 200,
+                    'autoGrow_bottomSpace' => 50,
+                    'removePlugins' => 'resize,maximize',
+                ],
+                // TAB
+                'tab' => trans('product.general_tab'),
+            ],
             [
                 'label' => trans('category.category'),
                 'type' => "select2_from_ajax",

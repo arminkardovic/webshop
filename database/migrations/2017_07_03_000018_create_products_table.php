@@ -22,6 +22,8 @@ class CreateProductsTable extends Migration
             $table->integer('attribute_set_id')->unsigned()->default('0');
             $table->string('name', 255)->nullable()->default(null);
             $table->longText('description')->nullable()->default(null);
+            $table->string('name_sr', 255)->nullable()->default(null);
+            $table->longText('description_sr')->nullable()->default(null);
             $table->integer('tax_id')->unsigned();
             $table->decimal('price', 13, 2)->nullable()->default(null);
 

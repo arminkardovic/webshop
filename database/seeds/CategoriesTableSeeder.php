@@ -21,6 +21,7 @@ class CategoriesTableSeeder extends Seeder
 				'lft'       => 2,
 				'rgt'       => 5,
 				'depth'     => 1,
+                'attribute_set_id' => 1
     		],
     		[
 				'parent_id' => 1,
@@ -29,6 +30,7 @@ class CategoriesTableSeeder extends Seeder
 				'lft'       => 3,
 				'rgt'       => 4,
 				'depth'     => 2,
+                'attribute_set_id' => 1
     		]
     	];
 

@@ -21,10 +21,12 @@
                         @endforeach
                     </div>
                 </div>
+                @php
 
-                <div class="col-xs-12 col-md-6 col-xl-5 f-image">
+                        @endphp
+                <div class="col-xs-12 col-md-6 col-xl-5 f-image" id="productInfo">
                     <h1 class="product_title entry-title">
-                        {{$product->name}}
+                        {{$product->nameTranslated}}
                     </h1>
 
                     <p class="price">
@@ -32,6 +34,7 @@
                         {{$product->formatted_price}}
                     </span>
                     </p>
+                    {{ Form::open(array('id' => 'attributes_form', 'method' => 'get')) }}
 
                     @foreach($attributes as $attribute)
 
@@ -41,8 +44,9 @@
 
                                 <div class="btn-group" data-toggle="buttons">
                                     @foreach($attribute->values as $value)
-                                        <label class="btn btn-primary @if ($loop->first) active @endif">
-                                            <input type="radio" name="options" id="{{$value->id}}"> {{ $value->value }}
+                                        <label class="btn btn-primary attribute-value">
+                                            <input type="radio" name="attribute-{{$attribute->id}}"
+                                                   value="{{$value->id}}"> {{ $value->value }}
                                         </label>
                                     @endforeach
                                 </div>
@@ -51,6 +55,7 @@
 
                         </div>
                     @endforeach
+                    {{ Form::close() }}
 
                     <form class="cart" method="post" enctype="multipart/form-data">
                         <div class="quantity">
@@ -99,4 +104,41 @@
         </div>
     </section>
 
+@endsection
+
+@section('after_scripts')
+    <script>
+        $(document).ready(function () {
+            setEvents();
+        });
+
+        function setEvents() {
+            $("label.attribute-value").click(function () {
+                $(this).children("input").prop("checked", true);
+                $("#attributes_form").submit();
+            });
+
+            $("#attributes_form").submit(function (event) {
+
+                event.preventDefault();
+                var numberOfAttributes = {{sizeof($attributes)}};
+                var combination = JSON.stringify($(this).serializeArray());
+
+                if($(this).serializeArray().length == numberOfAttributes) {
+
+                    $.ajax({
+                        url: '{{route('getInfoForCombination')}}',
+                        type: 'GET',
+                        data: {
+                            product_id: '{{$product->id}}',
+                            combination: combination
+                        },
+                    }).done(function (response) {
+                        $("#productInfo").html(response);
+                        setEvents();
+                    });
+                }
+            });
+        }
+    </script>
 @endsection

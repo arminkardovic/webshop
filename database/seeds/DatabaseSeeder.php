@@ -17,14 +17,14 @@ class DatabaseSeeder extends Seeder
         // Seed countries list
         $this->call(CountriesTableSeeder::class);
 
-        // Seed categories
-        $this->call(CategoriesTableSeeder::class);
-
         // Seed attributes
         $this->call(AttributesTableSeeder::class);
         $this->call(AttributeSetsTableSeeder::class);
         $this->call(AttributeAttributeSetTableSeeder::class);
         $this->call(AttributeValuesTableSeeder::class);
+
+        // Seed categories
+        $this->call(CategoriesTableSeeder::class);
 
         // Seed product with it's dependencies tables
         $this->call(TaxesTableSeeder::class);

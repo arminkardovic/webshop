@@ -20,3 +20,5 @@ Route::get('/user', function (Request $request) {
 Route::get('/categories', 'Api\CategoryController@categoriesAjax')->name('categories-ajax');
 Route::get('/subcategories', 'Api\CategoryController@subcategoriesAjax')->name('subcategories-ajax');
 
+Route::get('/getInfoForCombination', 'Api\ProductController@getInfoForCombination')->name('getInfoForCombination');
+

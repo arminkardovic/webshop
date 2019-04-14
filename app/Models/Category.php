@@ -25,7 +25,8 @@ class Category extends Model
         'slug',
         'lft',
         'rgt',
-        'depth'
+        'depth',
+        'attribute_set_id',
     ];
     // protected $hidden = [];
     // protected $dates = [];
@@ -54,12 +55,22 @@ class Category extends Model
 
     public function products()
     {
-        return $this->belongsToMany('App\Models\Product');
+        return $this->hasMany('App\Models\Product', 'category_id');
+    }
+
+    public function products2()
+    {
+        return $this->hasMany('App\Models\Product', 'subcategory_id');
     }
 
     public function cartRules()
     {
         return $this->belongsToMany('App\Models\CartRule');
+    }
+
+    public function attributeSet()
+    {
+        return $this->hasOne('App\Models\AttributeSet', 'id', 'attribute_set_id');
     }
 
     /*

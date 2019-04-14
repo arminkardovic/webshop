@@ -17,5 +17,4 @@ return [
 	'add_option'		=> 'Add option',
 	'option'			=> 'Option',
 	'default'			=> 'Default',
-    'all'               => 'All'
 ];

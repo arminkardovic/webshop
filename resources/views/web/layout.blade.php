@@ -31,6 +31,7 @@
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+@yield('after_scripts')
 
 </body>
 </html>

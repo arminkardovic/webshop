@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
@@ -26,7 +27,9 @@ class Product extends Model
         'subcategory_id',
         'attribute_set_id',
         'name',
+        'name_sr',
         'description',
+        'description_sr',
         'price',
         'tax_id',
         'stock',
@@ -122,6 +125,14 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductPrice', 'product_id', 'id');
 
+    }
+
+    public function getNameTranslatedAttribute() {
+        return Lang::locale() == 'en' ? $this->name : $this->name_sr;
+    }
+
+    public function getDescriptionTranslatedAttribute() {
+       return Lang::locale() == 'en' ? $this->description : $this->description_sr;
     }
 
 

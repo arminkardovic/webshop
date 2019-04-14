@@ -22,8 +22,14 @@ class CreateCategoriesTable extends Migration
             $table->integer('lft')->default('0');
             $table->integer('rgt')->default('0');
             $table->integer('depth')->default('0');
+            $table->integer('attribute_set_id')->unsigned()->default('0');
 
             $table->unique(["slug"], 'unique_categories');
+
+            $table->foreign('attribute_set_id')
+                ->references('id')->on('attribute_sets')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 
