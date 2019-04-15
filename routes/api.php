@@ -21,4 +21,5 @@ Route::get('/categories', 'Api\CategoryController@categoriesAjax')->name('catego
 Route::get('/subcategories', 'Api\CategoryController@subcategoriesAjax')->name('subcategories-ajax');
 
 Route::get('/getInfoForCombination', 'Api\ProductController@getInfoForCombination')->name('getInfoForCombination');
+Route::post('/addToCart', 'Api\ProductController@addToCart')->name('addToCart');
 

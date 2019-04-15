@@ -8250,6 +8250,11 @@ footer {
       font-size: 60px;
       font-weight: 300;
       border-radius: 9px; }
+
+.product .cart .single_add_to_cart_button:disabled {
+  background: #dddddd;
+ }
+
     .product .cart .heart {
       position: absolute;
       bottom: 0;
@@ -8402,5 +8407,9 @@ footer {
     border: 1px solid #660033; }
     .checkout-content #checkout-button-place-order:hover {
       background: #ab0257; }
+
+    .active-filter {
+      color:#660033!important;
+    }
 
 /* THEMES */

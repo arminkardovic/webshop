@@ -13,13 +13,13 @@
 
 
                     <div class="form-check">
-                        <label class="form-check-label">
+                        <label class="form-check-label @if(!isset($old['attribute-' . $attribute->id])) active-filter @endif">
                             <input type="checkbox" class="form-check-input" name="attribute-{{$attribute->id}}[]" value="all" @if(isset($old['attribute-' . $attribute->id]) && is_array($old['attribute-' . $attribute->id]) && in_array('all', $old['attribute-' . $attribute->id])) checked @endif>{{trans('attribute.all')}}
                         </label>
                     </div>
                     @foreach($attribute->values as $attributeValue)
                         <div class="form-check">
-                            <label class="form-check-label">
+                            <label class="form-check-label @if(isset($old['attribute-' . $attribute->id]) && is_array($old['attribute-' . $attribute->id]) && in_array($attributeValue->id, $old['attribute-' . $attribute->id])) active-filter @endif">
                                 <input type="checkbox" class="form-check-input" name="attribute-{{$attribute->id}}[]" value="{{$attributeValue->id}}" @if(isset($old['attribute-' . $attribute->id]) && is_array($old['attribute-' . $attribute->id]) && in_array($attributeValue->id, $old['attribute-' . $attribute->id])) checked @endif>{{$attributeValue->value}}
                             </label>
                         </div>
@@ -114,15 +114,26 @@
             $("input.form-check-input").click(function () {
                 var elementName = CSS.escape($(this).attr('name'));
 
+                var label = $(this).parent();
+
+                if(label.hasClass('active-filter')) {
+                    label.removeClass('active-filter');
+                }else{
+                    label.addClass('active-filter');
+                }
+
                 if($(this).val() === 'all') {
                     $('input[name=' + elementName + ']:checked').each(function() {
                         console.log($(this));
                         $(this).prop("checked", false);
+                        $(this).parent().removeClass('active-filter');
                     });
+                    label.addClass('active-filter');
                 }else{
                     $('input[name=' + elementName + ']:checked').each(function() {
                         if($(this).val() == 'all') {
                             $(this).prop("checked", false);
+                            $(this).parent().removeClass('active-filter');
                         }
                     });
                 }

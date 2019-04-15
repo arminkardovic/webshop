@@ -24,7 +24,10 @@
                 @php
 
                         @endphp
-                <div class="col-xs-12 col-md-6 col-xl-5 f-image" id="productInfo">
+
+                <div class="col-xs-12 col-md-6 col-xl-5 f-image">
+                    <div id = "alert_placeholder"></div>
+                    <div id="productInfo">
                     <h1 class="product_title entry-title">
                         {{$product->nameTranslated}}
                     </h1>
@@ -57,14 +60,14 @@
                     @endforeach
                     {{ Form::close() }}
 
-                    <form class="cart" method="post" enctype="multipart/form-data">
-                        <div class="quantity">
+                    <form class="cart" id="add_to_cart_form" method="post" enctype="multipart/form-data">
+                        <div class="quantity" hidden>
                             Količina: <input type="number" class="input-text qty text" step="1" min="1" max=""
                                              name="quantity" value="1" title="Qty" size="4" pattern="[0-9]*"
-                                             inputmode="numeric">
+                                             inputmode="numeric" disabled>
                         </div>
                         <button type="submit" name="add-to-cart" value="283"
-                                class="single_add_to_cart_button button alt">dodaj u korpu
+                                class="single_add_to_cart_button button alt" disabled>dodaj u korpu
                         </button>
                         <a href="#" class="heart"><i class="fas fa-heart"></i></a>
                     </form>
@@ -100,6 +103,7 @@
                         <input class="btn btn-primary" type="button" value="besplatna">
                     </div>
                 </div>
+                </div>
             </div>
         </div>
     </section>
@@ -122,23 +126,76 @@
 
                 event.preventDefault();
                 var numberOfAttributes = {{sizeof($attributes)}};
-                var combination = JSON.stringify($(this).serializeArray());
+                var combination = $(this).serializeArray();
+                var combinationJson = JSON.stringify(combination);
+                var quantity = $("input[name=quantity]").val();
 
-                if($(this).serializeArray().length == numberOfAttributes) {
+                if (combination.length === numberOfAttributes) {
 
                     $.ajax({
                         url: '{{route('getInfoForCombination')}}',
                         type: 'GET',
                         data: {
                             product_id: '{{$product->id}}',
-                            combination: combination
+                            combination: combinationJson
                         },
                     }).done(function (response) {
                         $("#productInfo").html(response);
+                        var quantityElement = $("input[name=quantity]");
+
+                        if(parseInt(quantityElement.attr('max')) >= quantity) {
+                            quantityElement.val(quantity);
+                        }
                         setEvents();
                     });
                 }
             });
+
+            $("#add_to_cart_form").submit(function (event) {
+                event.preventDefault();
+                var quantity = $("input[name=quantity]").val();
+                var productId = {{$product->id}};
+                var combination = $("#attributes_form").serializeArray();
+                var combinationIds = [];
+
+                for (var i = 0; i < combination.length; i++) {
+                    combinationIds.push(parseInt(combination[i].value));
+                }
+
+                console.log(combinationIds);
+
+                $.ajax({
+                    url: '{{route('addToCart')}}',
+                    type: 'POST',
+                    data: {
+                        product_id: productId,
+                        combination: combinationIds,
+                        quantity: quantity
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    }
+                }).done(function (response) {
+                    var date = new Date();
+                    var minutes = 30;
+                    date.setTime(date.getTime() + (minutes * 60 * 1000));
+                    document.cookie = "cart" + "=" + response + ";path=/;expires=" + date.toGMTString();
+                    bootstrap_alert.success("Proizvod dodat u korpu.");
+                }).fail(function (error) {
+                    bootstrap_alert.warning("Nema dovoljno proizvoda na stanju.");
+                });
+            });
+        }
+
+
+        bootstrap_alert = {};
+
+        bootstrap_alert.warning = function(message) {
+            $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+        }
+
+        bootstrap_alert.success = function(message) {
+            $('#alert_placeholder').html('<div class="alert alert-success" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
         }
     </script>
 @endsection

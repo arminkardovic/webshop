@@ -1,7 +1,6 @@
 <h1 class="product_title entry-title">
     {{$product->nameTranslated}}
 </h1>
-
 <p class="price">
                     <span class="price-amount amount">
                         @if(isset($productPrice) && isset($productPrice->price) && $productPrice->stock > 0)
@@ -21,9 +20,9 @@
 
             <div class="btn-group" data-toggle="buttons">
                 @foreach($attribute->values as $value)
-                    <label class="btn btn-primary attribute-value" for="{{$value->id}}">
+                    <label class="btn btn-primary attribute-value{{in_array($value->id, $productPrice->attributes) ? ' active': ''}}" for="{{$value->id}}">
                         <input type="radio" id="{{$value->id}}" name="attribute-{{$attribute->id}}"
-                               value="{{$value->id}}"> {{ $value->value }}
+                               value="{{$value->id}}" @if(in_array($value->id, $productPrice->attributes)) checked @endif >{{ $value->value }}
                     </label>
                 @endforeach
             </div>
@@ -34,14 +33,14 @@
 @endforeach
 {{ Form::close() }}
 
-<form class="cart" method="post" enctype="multipart/form-data">
-    <div class="quantity">
-        Količina: <input type="number" class="input-text qty text" step="1" min="1" max=""
+<form class="cart" method="post" enctype="multipart/form-data" id="add_to_cart_form">
+    <div class="quantity" @if(!(isset($productPrice) && isset($productPrice->price) && $productPrice->stock > 0)) hidden @endif >
+        Količina: <input type="number" class="input-text qty text" step="1" min="1"
                          name="quantity" value="1" title="Qty" size="4" pattern="[0-9]*"
-                         inputmode="numeric">
+                         inputmode="numeric" max="{{$productPrice->stock}}">
     </div>
     <button type="submit" name="add-to-cart" value="283"
-            class="single_add_to_cart_button button alt">dodaj u korpu
+            class="single_add_to_cart_button button alt" @if(!(isset($productPrice) && isset($productPrice->price) && $productPrice->stock > 0)) disabled @endif >dodaj u korpu
     </button>
     <a href="#" class="heart"><i class="fas fa-heart"></i></a>
 </form>
