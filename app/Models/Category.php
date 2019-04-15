@@ -63,6 +63,13 @@ class Category extends Model
         return $this->hasMany('App\Models\Product', 'subcategory_id');
     }
 
+    public function allProducts()
+    {
+        return Product::where(function($q) {
+            $q->where('category_id', '=', $this->id)->orWhere('subcategory_id', '=', $this->id);
+        });
+    }
+
     public function cartRules()
     {
         return $this->belongsToMany('App\Models\CartRule');

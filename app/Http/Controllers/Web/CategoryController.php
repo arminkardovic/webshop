@@ -23,7 +23,7 @@ class CategoryController extends BaseController
 
         $category = Category::where("slug", "=", $category)->first();
         /** @var Category $category */
-        $products = $category->products();
+        $products = $category->allProducts();
 
         $products->whereHas('prices', function ($q) use ($request) {
 
