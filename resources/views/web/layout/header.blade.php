@@ -53,5 +53,12 @@
                 </svg>
             </a>
         </li>
+        <li>@auth
+                <form class="form-horizontal" method="POST" action="{{ route('logout') }}">
+                    {{ csrf_field() }}
+                    <button type="submit">LOGOUT</button>
+                </form>
+            @endauth
+        </li>
     </ul>
 </header>

@@ -22,9 +22,12 @@ class User extends Authenticatable
     // public $timestamps = false;
     // protected $guarded = ['id'];
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'address',
+        'activation_code',
         'salutation',
         'birthday',
         'gender',
@@ -52,7 +55,7 @@ class User extends Authenticatable
     {
         return [
             'userSalutation' => $this->user->salutation,
-            'userName'       => $this->user->name,
+            'userName'       => $this->user->first_name . ' ' . $this->user->last_name,
             'userEmail'      => $this->user->email,
             'age'            => $this->age(),
         ];

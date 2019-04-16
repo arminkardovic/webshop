@@ -50,6 +50,7 @@ class ProductController extends BaseController
         $productId = $request->get('product_id');
         $combination = $request->get('combination');
         $quantity = $request->get('quantity');
+        sort($combination);
 
         $attributeValueIds = '[' . join(', ', $combination) . ']';
 

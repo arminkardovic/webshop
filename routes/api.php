@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:api');
+})->middleware('register:api');
 
 Route::get('/categories', 'Api\CategoryController@categoriesAjax')->name('categories-ajax');
 Route::get('/subcategories', 'Api\CategoryController@subcategoriesAjax')->name('subcategories-ajax');

@@ -18,13 +18,11 @@ class CategoryController extends BaseController
 {
     public function index(Request $request, $category)
     {
-//        dd($request->get('attribute-1'));
-
-
         $category = Category::where("slug", "=", $category)->first();
         /** @var Category $category */
         $products = $category->allProducts();
 
+        /** @var  */
         $products->whereHas('prices', function ($q) use ($request) {
 
             $q->where('stock', '>', 0);

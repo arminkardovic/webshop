@@ -1,9 +1,17 @@
 <?php
 
+
 Route::get('/', "IndexController@index");
 
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
 Route::get('/product/{id}', "ProductController@index")->name("product.single");
+Route::get('/checkout', 'CheckoutController@index')->name('checkout');
+
 Route::get('/{category}', "CategoryController@index");
+
 
 Route::get('{category}/{page}', function ($category = null, $page = null) {
     echo "<h1>Category: $category</h1>";
@@ -28,3 +36,5 @@ Route::get('{category}/{subcategory}/{id}', function ($category = null, $subcate
 
 //Route::get('/login/{social}', 'Auth\LoginController@socialLogin')->where('social', 'twitter|facebook|linkedin|google|github|bitbucket');
 //Route::get('/login/{social}/callback', 'Auth\LoginController@handleProviderCallback')->where('social', 'twitter|facebook|linkedin|google|github|bitbucket');
+
+

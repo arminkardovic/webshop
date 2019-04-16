@@ -60,7 +60,7 @@ return [
     'route_prefix' => 'admin',
 
     // Set this to false if you would like to use your own AuthController and PasswordController
-    // (you then need to setup your auth routes manually in your routes.php file)
+    // (you then need to setup your register routes manually in your routes.php file)
     'setup_auth_routes' => true,
 
     // Set this to false if you would like to skip adding the dashboard routes

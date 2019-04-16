@@ -16,9 +16,11 @@ class UsersTableSeeder extends Seeder
         $users = [
             // Admin
             [
-                'name' => 'Admin',
+                'first_name' => 'Admin',
+                'last_name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'password' => '$2y$10$ViW0rhHAu4yf/Z9qG94zSuOyLiqewAv04jxYvGqYpOWTicOsssoEi', // Encrypted password is: adminpass
+                'address' => 'Street 123',
                 'salutation' => 'Gospodin.',
                 'birthday' => \Carbon\Carbon::now()->toDateString(),
                 'gender' => 1,
@@ -27,9 +29,11 @@ class UsersTableSeeder extends Seeder
             ],
             // Client
             [
-                'name' => 'Client',
+                'first_name' => 'Client',
+                'last_name' => 'Client',
                 'email' => 'client@gmail.com',
                 'password' => '$2y$10$xxgI.2pRrN1H6LuxYJz.0.653AyqU4E1302xe.N4MOhv3uHM0Uqo2', // Encrypted password is: clientpass
+                'address' => 'Street 123',
                 'salutation' => 'Gospođa.',
                 'birthday' => \Carbon\Carbon::now()->subYears(20)->toDateString(),
                 'gender' => 1,

@@ -13,7 +13,8 @@
         "backpack/permissionmanager": "^2.1",
         "laravel/socialite": "3.2",
         "backpack/menucrud": "^1.0",
-        "backpack/pagemanager": "^1.1"
+        "backpack/pagemanager": "^1.1",
+        "barryvdh/laravel-ide-helper": "^2.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -54,7 +55,9 @@
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "php artisan optimize",
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:meta"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
