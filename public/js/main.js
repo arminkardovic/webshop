@@ -74,6 +74,7 @@ function removeFromCartCollapse(event, item, key, url) {
 
 /*bootstrap_alert = {};
 
+
 bootstrap_alert.warning = function(message) {
     $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
 }
