@@ -25,7 +25,8 @@ class UserStoreRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
     public function rules()
     {
         return [
-            'name'     => 'required',
+            'first_name'     => 'required',
+            'last_name'     => 'required',
             'email'    => 'required|unique:'.config('laravel-permission.table_names.users', 'users').',email',
             'password' => 'required|confirmed',
         ];

@@ -12,7 +12,6 @@ class ProductController extends BaseController
 {
     public function index(Request $request, $id,  CookieJar $cookieJar)
     {
-        $cookieJar->queue(cookie('ime', 'Alen', 30));
 
 
         $product = Product::findOrFail($id);

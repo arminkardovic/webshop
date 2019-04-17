@@ -37,8 +37,12 @@ class ClientCrudController extends CrudController
                 'label'       => trans('client.salutation'),
             ],
             [
-                'name'  => 'name',
-                'label' => trans('client.name'),
+                'name'  => 'first_name',
+                'label' => trans('client.first_name'),
+            ],
+            [
+                'name'  => 'last_name',
+                'label' => trans('client.last_name'),
             ],
             [
                 'name'      => 'gender',
@@ -52,6 +56,10 @@ class ClientCrudController extends CrudController
             [
                 'name'  => 'email',
                 'label' => trans('client.email'),
+            ],
+            [
+                'name' => 'description',
+                'label' => trans('user.description'),
             ],
             [
                 'name'      => 'active',
@@ -92,8 +100,15 @@ class ClientCrudController extends CrudController
                 'tab'   => trans('client.tab_general'),
             ],
             [
-                'name'  => 'name',
-                'label' => trans('client.name'),
+                'name'  => 'first_name',
+                'label' => trans('client.first_name'),
+                'type'  => 'text',
+
+                'tab'   => trans('client.tab_general'),
+            ],
+            [
+                'name'  => 'last_name',
+                'label' => trans('client.last_name'),
                 'type'  => 'text',
 
                 'tab'   => trans('client.tab_general'),
@@ -103,6 +118,17 @@ class ClientCrudController extends CrudController
                 'label' => trans('client.email'),
                 'type'  => 'email',
 
+                'tab'   => trans('client.tab_general'),
+            ],
+            [
+                'name' => 'description',
+                'label' => trans('user.description'),
+                'type' => 'ckeditor',
+                'options' => [
+                    'autoGrow_minHeight' => 200,
+                    'autoGrow_bottomSpace' => 50,
+                    'removePlugins' => 'resize,maximize',
+                ],
                 'tab'   => trans('client.tab_general'),
             ],
             [

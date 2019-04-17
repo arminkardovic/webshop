@@ -95,6 +95,8 @@ class LoginController extends BaseController
         return $this->sendFailedLoginResponse($request);
     }
 
+
+
     /**
      * Send the response after the user was authenticated.
      *
@@ -120,6 +122,10 @@ class LoginController extends BaseController
      */
     protected function authenticated(Request $request, $user)
     {
-        return redirect('/');
+        if ($user->active != 1) {
+            auth()->logout();
+            return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.')->with('email', $user->email);
+        }
+        return redirect()->intended($this->redirectPath());
     }
 }

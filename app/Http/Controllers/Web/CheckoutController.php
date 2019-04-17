@@ -21,10 +21,23 @@ class CheckoutController extends BaseController
 {
     public function index(Request $request)
     {
+        $cart = $this->getCartObject();
+
+        return view('web.checkout.index', [
+            'cart' => $cart
+        ]);
+    }
+
+    public function getCollapseCartHtml(Request $request) {
+        $cart = $this->getCartObject();
+        return view('web.cart.collapse', [
+            'cart' => $cart
+        ]);
+    }
+
+    private function getCartObject() {
         if(!Cookie::has('cart')) {
-            return view("web.checkout.index", [
-                'cart' => []
-            ]);
+            return [];
         }
 
         $cart = Cookie::get('cart');
@@ -89,8 +102,6 @@ class CheckoutController extends BaseController
             $cart[$key] = $item;
         }
 
-        return view("web.checkout.index", [
-            'cart' => $cart
-        ]);
+        return $cart;
     }
 }

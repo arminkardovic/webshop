@@ -43,6 +43,7 @@
 
             <div class="col-md-6">
                 <div class="carpet-items">
+                    <div id = "alert_placeholder"></div>
                     <h3>ORDER REVIEW</h3>
 
                     <table class="table span12">
@@ -58,10 +59,11 @@
                         <tbody>
                         @php($total = 0)
 
-                        @foreach($cart as $item)
+                        @foreach($cart as $key => $item)
                             @php($total += $item->quantity * $item->price)
-                            <tr>
+                            <tr id="row-{{$key}}">
                                 <td class="product-info">
+                                    <a href="" onclick="removeFromCart(event, {{json_encode($item)}}, {{$key}})" class="close"><i class="fas fa-times"></i></a>
                                     <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : 'img/blackgirl.jpg'}}"
                                          alt="">
                                     <div class="product-name">{{Lang::locale() == 'en' ? $item->product_name : $item->product_name_sr}}</div>
@@ -128,3 +130,44 @@
     </div>
 
 </main>
+
+
+@section('after_scripts')
+    <script>
+        function removeFromCart(event, item, key) {
+            event.preventDefault();
+
+
+            $.ajax({
+                url: '{{route('removeFromCart')}}',
+                type: 'POST',
+                data: {
+                    item: JSON.stringify(item)
+                },
+                xhrFields: {
+                    withCredentials: true
+                }
+            }).done(function (response) {
+                $("tr#row-" + key).remove();
+                var date = new Date();
+                var minutes = 30;
+                date.setTime(date.getTime() + (minutes * 60 * 1000));
+                document.cookie = "cart" + "=" + response + ";path=/;expires=" + date.toGMTString();
+                bootstrap_alert.success("Proizvod uklonjen iz korpe.");
+            }).fail(function (error) {
+                bootstrap_alert.warning("Greska prilikom uklanjanja iz korpe.");
+            });
+        }
+
+        bootstrap_alert = {};
+
+        bootstrap_alert.warning = function(message) {
+            $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+        }
+
+        bootstrap_alert.success = function(message) {
+            $('#alert_placeholder').html('<div class="alert alert-success" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+        }
+
+    </script>
+@endsection

@@ -9,7 +9,7 @@
 <br/>
 Your registered email is {{$user->email}} , Please click on the below link to verify your email account
 <br/>
-<a href="{{url('user/verify', $user->activation_code)}}">Verify Email</a>
+<a href="{{url('user/verify/' . $user->activation_code)}}">Verify Email</a>
 </body>
 
 </html>

@@ -1,5 +1,7 @@
 <?php
 
+Route::get('/user/verify/{token}', 'Auth\RegisterController@activateUser');
+Route::get('/user/resend/{email}', 'Auth\RegisterController@resendActivationMail');
 
 Route::get('/', "IndexController@index");
 
@@ -9,6 +11,9 @@ Auth::routes();
 
 Route::get('/product/{id}', "ProductController@index")->name("product.single");
 Route::get('/checkout', 'CheckoutController@index')->name('checkout');
+Route::get('/profile', 'ProfileController@index')->name('home');
+Route::post('/users/update-profile', 'ProfileController@updateProfile')->name('update-profile');
+Route::get('/getCollapseCartHtml', 'CheckoutController@getCollapseCartHtml');
 
 Route::get('/{category}', "CategoryController@index");
 

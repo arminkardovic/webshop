@@ -6,6 +6,8 @@ return [
 	'clients'               => 'Clients',
 	'email'                 => 'E-mail',
 	'name'                  => 'Name',
+    'first_name'            => 'First name',
+    'last_name'             => 'Last name',
 	'salutation'            => 'Salutation',
 	'birthday'				=> 'Birthday',
 	'gender'                => 'Gender',

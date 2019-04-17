@@ -19,7 +19,9 @@
 
     <ul class="carpet-menu">
         <li class="login">
-            <a href="#">
+            <a
+                    @auth href="{{url('/profile')}}" @endauth
+            @guest href="{{url('/login')}}" @endguest>
                 Login
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                      preserveAspectRatio="xMidYMid" width="60" height="60" viewBox="0 0 60 60">
@@ -43,7 +45,7 @@
             </a>
         </li>
         <li class="carpet">
-            <a class="btn btn-primary" data-toggle="collapse" href="#collapseCarpet" role="button" aria-expanded="false"
+            <a class="btn btn-primary" data-toggle="collapse" id="collapseCartButton" href="#collapseCarpet" role="button" aria-expanded="false"
                aria-controls="collapseCarpet">
                 Korpa
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

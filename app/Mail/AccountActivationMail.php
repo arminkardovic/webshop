@@ -28,6 +28,6 @@ class AccountActivationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('email.verify_user', ['user' => $this->user]);
+        return $this->view('email.verify_user', ['user' => $this->user])->from('no-reply@sosa-shop.com', 'SOSA Shop')->subject('Please activate your account');
     }
 }

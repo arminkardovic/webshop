@@ -55,7 +55,7 @@ class RegisterController extends BaseController
     {
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create(array_merge($request->all(), [str_random(15) . time()]))));
+        event(new Registered($user = $this->create($request->all())));
 
         Mail::to($user->email)->send(new AccountActivationMail($user));
 
@@ -96,7 +96,8 @@ class RegisterController extends BaseController
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'address' => $data['address']
+            'address' => $data['address'],
+            'activation_code' => str_random(15) . time()
         ]);
     }
 
@@ -115,5 +116,58 @@ class RegisterController extends BaseController
     protected function registered(Request $request, $user)
     {
         return redirect('/register')->with('message', 'Successfully created a new account. Please check your email and activate your account.');
+    }
+
+
+    /**
+     * Activate the user with given activation code.
+     * @param string $activationCode
+     * @return string
+     */
+    public function activateUser($activationCode)
+    {
+        try {
+            $user = User::where('activation_code', $activationCode)->first();
+            if (!$user) {
+                return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
+            }
+            $user->active = 1;
+            $user->activation_code = null;
+            $user->save();
+//            auth()->login($user);
+            $status = "Your e-mail is verified. You can now login.";
+            return redirect('/login')->with('message', $status);
+
+        } catch (\Exception $exception) {
+            logger()->error($exception);
+            return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
+        }
+    }
+
+
+    /**
+     * Resend activation code to user e-mail.
+     * @param string $email
+     * @return string
+     */
+    public function resendActivationMail(Request $request, $email)
+    {
+        try {
+            $user = User::where('email', $email)->first();
+            if (!$user) {
+                return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
+            }
+            $user->activation_code = str_random(15) . time();
+            $user->save();
+
+            Mail::to($user->email)->send(new AccountActivationMail($user));
+            $status = 'We have sent you an activation email. Please check your email and activate your account.';
+
+            return redirect('/login')->with('message', $status);
+
+        } catch (\Exception $exception) {
+            logger()->error($exception);
+            return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
+        }
     }
 }

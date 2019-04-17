@@ -98,4 +98,43 @@ class ProductController extends BaseController
         return $encrypter->encrypt(json_encode($cart));
 
     }
+
+    public function removeFromCart(Request $request, CookieJar $cookieJar)
+    {
+        $item = json_decode($request->get('item'));
+
+
+
+        $encrypter = app(\Illuminate\Contracts\Encryption\Encrypter::class);
+
+
+        $cart = array();
+
+        if(Cookie::has('cart')) {
+            $cartCookie = $encrypter->decrypt(Cookie::get('cart'));
+            $cart = json_decode($cartCookie);
+        }
+
+        $array = array($item);
+
+        $combinationIds = array();
+
+        foreach ($item->combinationInfo as $combinationItem) {
+            $combinationIds[] = $combinationItem->id;
+        }
+
+        foreach($cart as $key => $currentItem) {
+            if($currentItem->combination == $combinationIds) {
+                unset($cart[$key]);
+                $cart = array_values($cart);
+                break;
+            }
+        }
+
+
+        $cookieJar->queue(cookie('cart', json_encode($cart), 30));
+
+        return $encrypter->encrypt(json_encode($cart));
+
+    }
 }

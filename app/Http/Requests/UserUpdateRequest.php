@@ -26,7 +26,8 @@ class UserUpdateRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
     {
         return [
             'email'    => 'required',
-            'name'     => 'required',
+            'first_name'     => 'required',
+            'last_name'     => 'required',
             'password' => 'confirmed',
         ];
     }

@@ -2,14 +2,29 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                @if(session()->has('message'))
+                    <div class="alert alert-success">
+                        {{ session()->get('message') }}
+                    </div>
+                @endif
+                @if(session()->has('warning'))
+                    <div class="alert alert-warning">
+                        {{ session()->get('warning') }}
+                        <br>
+                        <a href="{{url('user/resend/' . session()->get('email'))}}">Resend code</a>
+                    </div>
+                @endif
                 <div class="card">
                     <div class="card-header">Login</div>
                     <div class="card-body">
-                        <form name="login-form" onsubmit="return validform()" method="POST" action="{{ route('login') }}">
+
+                        <form name="login-form" onsubmit="return validform()" method="POST"
+                              action="{{ route('login') }}">
                             {{ csrf_field() }}
 
                             <div class="form-group row{{ $errors->has('email') ? ' has-error' : '' }}">
-                                <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+                                <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail
+                                    Address</label>
                                 <div class="col-md-6">
                                     <input type="text" id="email_address" class="form-control" name="email">
                                     @if ($errors->has('email'))
@@ -21,9 +36,11 @@
                             </div>
 
                             <div class="form-group row{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <label for="email_address" class="col-md-4 col-form-label text-md-right">Password</label>
+                                <label for="email_address"
+                                       class="col-md-4 col-form-label text-md-right">Password</label>
                                 <div class="col-md-6">
-                                    <input type="password" class="form-control" placeholder="Your Password *" value="" name="password"/>
+                                    <input type="password" class="form-control" placeholder="Your Password *" value=""
+                                           name="password"/>
                                     @if ($errors->has('password'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -51,9 +68,11 @@
                         <strong id="block-new-customer-heading" role="heading" aria-level="2">New Customers</strong>
                     </div>
                     <div class="block-content" aria-labelledby="block-new-customer-heading">
-                        <p>Creating an account has many benefits: check out faster, keep more than one address, track orders and more.</p>
+                        <p>Creating an account has many benefits: check out faster, keep more than one address, track
+                            orders and more.</p>
                         <div class="actions-toolbar">
-                            <button type="submit" class="btn btn-primary" onclick="window.location.replace('{{route('register')}}')">
+                            <button type="submit" class="btn btn-primary"
+                                    onclick="window.location.replace('{{route('register')}}')">
                                 REGISTER
                             </button>
                         </div>

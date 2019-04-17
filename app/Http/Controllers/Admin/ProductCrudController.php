@@ -926,10 +926,9 @@ class ProductCrudController extends CrudController
         $product = Product::findOrFail($request->get('productId'));
         /** @var Product $product */
 
-        if ($product->attribute_set_id != $request->setId) {
+        if ($product->attribute_set_id == $request->setId) {
             $oldPrices = $product->prices;
         }
-
 
         foreach ($attributes as $attribute) {
 
@@ -939,7 +938,7 @@ class ProductCrudController extends CrudController
                 $valueIndex = (int)floor(($i / $repeatCount) % count($attribute->values));
                 $combinations[$i]->combinations[$order] = $attribute->values->toArray()[$valueIndex];
 
-                if ($product->attribute_set_id != $request->setId) {
+                if ($product->attribute_set_id == $request->setId) {
 
                     foreach ($oldPrices as $oldPrice) {
                         /** @var ProductPrice $oldPrice */
@@ -958,6 +957,7 @@ class ProductCrudController extends CrudController
 
             $order++;
         }
+
 
         return view('renders.product_update_prices', compact('combinations', 'attributes'));
     }
