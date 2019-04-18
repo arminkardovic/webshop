@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
             $table->longText('description_sr')->nullable()->default(null);
             $table->integer('tax_id')->unsigned();
             $table->decimal('price', 13, 2)->nullable()->default(null);
+            $table->integer('weight');
 
             $table->integer('stock')->nullable()->default('0');
             $table->tinyInteger('active')->default('0');

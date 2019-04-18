@@ -1,6 +1,7 @@
 @extends('web.layout')
 
 @section("content")
-
-    ARMINM
+    @include("web.homepage.main-slideshow", [])
+    @include("web.homepage.slogan", [])
+    @include("web.homepage.categories-block", [])
 @endsection

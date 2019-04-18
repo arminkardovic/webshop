@@ -24,4 +24,15 @@ class ProductController extends BaseController
             'attributes' => $attributes
         ]);
     }
+
+
+    public function addToFavorites(Request $request) {
+        $productId = $request->get('product_id');
+        \Auth::user()->favorites()->attach($productId);
+    }
+
+    public function removeFromFavorites (Request $request) {
+        $productId = $request->get('product_id');
+        \Auth::user()->favorites()->detach($productId);
+    }
 }

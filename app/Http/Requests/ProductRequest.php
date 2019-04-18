@@ -30,6 +30,7 @@ class ProductRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
             'name_sr'              => 'required|max:255',
             'description'       => 'required|min:3',
             'description_sr'       => 'required|min:3',
+            'weight'            => 'required|numeric|between:0,999999',
             'price'             => 'required|numeric|between:0,9999999999999.999999',
             'category_id'        => 'required',
             'subcategory_id'        => 'required',

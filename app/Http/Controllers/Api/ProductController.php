@@ -137,4 +137,5 @@ class ProductController extends BaseController
         return $encrypter->encrypt(json_encode($cart));
 
     }
+
 }

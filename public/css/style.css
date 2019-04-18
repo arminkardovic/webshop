@@ -7875,17 +7875,24 @@ a.text-dark:hover, a.text-dark:focus {
     display: block;
     line-height: 50px; }
 
+.category-image img {
+  width: 100%;
+  max-height: 600px;
+  -o-object-fit: cover;
+  object-fit: cover; }
+
 .products {
   display: block;
-  padding: 150px 2%;
+  padding: 50px 2%;
   position: relative; }
   .products .product {
     display: block;
-    text-align: center; }
+    text-align: center;
+    padding: 0 0 50px 0; }
     .products .product:hover {
       text-decoration: none; }
     .products .product img {
-      height: 550px;
+      height: 450px;
       width: auto; }
     .products .product .price {
       text-align: left;
@@ -8072,6 +8079,25 @@ a.text-dark:hover, a.text-dark:focus {
   .register-form .sign-up {
     margin: 50px 0;
     text-align: center; }
+  .register-form .social-sign-up {
+    border: 1px solid #660033; }
+    .register-form .social-sign-up h4 {
+      text-align: center;
+      padding: 15px 0; }
+    .register-form .social-sign-up .social-link {
+      display: inline-block;
+      width: 32%;
+      padding: 20px 0;
+      color: #660033;
+      font-size: 18px;
+      text-align: center; }
+      .register-form .social-sign-up .social-link:hover {
+        text-decoration: none;
+        color: #8b0247; }
+      .register-form .social-sign-up .social-link .text {
+        display: inline-block; }
+    .register-form .social-sign-up i {
+      font-size: 20px; }
 
 /* LAYOUT */
 header {
@@ -8155,6 +8181,15 @@ header {
       width: auto;
       height: 48px;
       right: 0; }
+    header .carpet-menu .carpet-value {
+      position: absolute;
+      bottom: 20px;
+      right: 0;
+      font-size: 13px;
+      font-weight: bold;
+      left: 10px;
+      margin: auto;
+      color: #660033; }
   header .logo {
     float: left; }
 
@@ -8162,7 +8197,7 @@ footer {
   overflow: hidden;
   background: #660033;
   border-top: 2px solid #450123;
-  padding: 50px 95px 75px; }
+  padding: 50px 2% 50px; }
   footer ul {
     padding: 0;
     margin: 0; }
@@ -8387,6 +8422,49 @@ footer {
     color: #8b0247;
     background: transparent;
     text-align: left; }
+  .checkout-content .payment-method h3 {
+    display: block;
+    background: #660033;
+    color: #fff;
+    padding: 10px;
+    margin: 0; }
+  .checkout-content .payment-method .payment-way {
+    color: #333333;
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 36px;
+    padding: 30px 0;
+    text-align: center;
+    position: relative; }
+  .checkout-content .payment-method .cards label {
+    background-color: transparent !important;
+    border: none !important;
+    color: transparent; }
+    .checkout-content .payment-method .cards label.active, .checkout-content .payment-method .cards label:focus {
+      -webkit-box-shadow: none;
+      box-shadow: none; }
+      .checkout-content .payment-method .cards label.active i, .checkout-content .payment-method .cards label:focus i {
+        color: #0b5a9f; }
+  .checkout-content .payment-method .cards input {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    pointer-events: none; }
+  .checkout-content .payment-method .cards i {
+    color: #660033;
+    font-size: 50px; }
+  .checkout-content .gift-card h3 {
+    display: block;
+    background: #660033;
+    color: #fff;
+    padding: 10px;
+    margin: 0 0 20px 0; }
+  .checkout-content .gift-card input {
+    margin-right: 35px; }
+  .checkout-content .gift-card button {
+    color: #fff;
+    background: #8b0247; }
+    .checkout-content .gift-card button:focus, .checkout-content .gift-card button:hover {
+      background: #660033; }
   .checkout-content .carpet-items h3 {
     display: block;
     background: #660033;
@@ -8479,17 +8557,9 @@ footer {
   .profile .tab-content > .active {
     display: block;
     min-height: 165px;
-    padding: 5% 15%; }
+    padding: 0 0 0 10%; }
     .profile .tab-content > .active button {
       background: #660033;
       border-color: #660033; }
-
-.active-filter {
-  color:#660033!important;
-}
-
-.product .cart .single_add_to_cart_button:disabled {
-  background: #dddddd;
-}
 
 /* THEMES */

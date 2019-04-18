@@ -1,0 +1,7 @@
+.active-filter {
+    color:#660033!important;
+}
+
+.product .cart .single_add_to_cart_button:disabled {
+    background: #dddddd;
+}

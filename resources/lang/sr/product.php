@@ -15,6 +15,9 @@ return [
 	'hint_category'             => 'Select product category',
 	'sku'                       => 'SKU',
 	'stock'                     => 'Stock',
+    'weight'                    => 'Weight',
+    'grams'                     => 'gr',
+
 
 	// Product Tabs
 	'general_tab'               => 'General',

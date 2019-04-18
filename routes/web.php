@@ -1,5 +1,4 @@
 <?php
-
 Route::get('/user/verify/{token}', 'Auth\RegisterController@activateUser');
 Route::get('/user/resend/{email}', 'Auth\RegisterController@resendActivationMail');
 
@@ -14,6 +13,10 @@ Route::get('/checkout', 'CheckoutController@index')->name('checkout');
 Route::get('/profile', 'ProfileController@index')->name('home');
 Route::post('/users/update-profile', 'ProfileController@updateProfile')->name('update-profile');
 Route::get('/getCollapseCartHtml', 'CheckoutController@getCollapseCartHtml');
+Route::get('/getCollapseInnerCartHtml', 'CheckoutController@getCollapseInnerCartHtml');
+Route::get('/getCartTotal', 'CheckoutController@getCartTotal')->name('getCartTotal');
+Route::post('/addToFavorites', 'ProductController@addToFavorites')->name('addToFavorites')->middleware('api');
+Route::post('/removeFromFavorites', 'ProductController@removeFromFavorites')->name('removeFromFavorites')->middleware('api');
 
 Route::get('/{category}', "CategoryController@index");
 

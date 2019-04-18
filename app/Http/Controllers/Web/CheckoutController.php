@@ -35,6 +35,13 @@ class CheckoutController extends BaseController
         ]);
     }
 
+    public function getCollapseInnerCartHtml(Request $request) {
+        $cart = $this->getCartObject();
+        return view('web.cart.collapse-inner', [
+            'cart' => $cart
+        ]);
+    }
+
     private function getCartObject() {
         if(!Cookie::has('cart')) {
             return [];
@@ -103,5 +110,28 @@ class CheckoutController extends BaseController
         }
 
         return $cart;
+    }
+
+
+    /**
+     * @return int|mixed
+     */
+    public function getCartTotal() {
+        $cartTotal = 0;
+
+        if (Cookie::has('cart')) {
+            $cart = Cookie::get('cart');
+            $cart = json_decode($cart);
+
+            foreach ($cart as $item) {
+                $joinedCombination = '[' . join(', ', $item->combination) . ']';
+
+                $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
+
+                $cartTotal += $price->price * $item->quantity;
+            }
+        }
+
+        return $cartTotal;
     }
 }

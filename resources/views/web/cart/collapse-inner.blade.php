@@ -1,15 +1,10 @@
-<!-- Carpet dropdown -->
-<div class="collapse" id="collapseCarpet">
-
-    <div class="carpet-items">
+<div class="carpet-items">
         @php($total = 0)
 
         @foreach($cart as $key => $item)
             @php($total += $item->quantity * $item->price)
         <li id="li-{{$key}}">
-            <a href="{{route("product.single", ["id"=>$item->product_id])}}">
             <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : 'img/blackgirl.jpg'}}" alt="">
-            </a>
             <div class="carpet-item-content">
 
                 <div class="heading">
@@ -72,4 +67,3 @@
         <div class="delivery-time">Očekivano vrijeme dostave: <span>5 dana</span></div>
 
     </div>
-</div>

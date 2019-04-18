@@ -15,8 +15,11 @@ return [
 	'hint_category'             => 'Select product category',
 	'sku'                       => 'SKU',
 	'stock'                     => 'Stock',
+    'weight'                    => 'Weight',
+    'grams'                     => 'gr',
 
-	// Product Tabs
+
+    // Product Tabs
 	'general_tab'               => 'General',
 	'attributes_tab'            => 'Attributes',
 	'product_images_tab'        => 'Product Images',

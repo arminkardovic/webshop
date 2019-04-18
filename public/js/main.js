@@ -61,25 +61,49 @@ function removeFromCartCollapse(event, item, key, url) {
             withCredentials: true
         }
     }).done(function (response) {
-        $("li#li-" + key).remove();
         var date = new Date();
         var minutes = 30;
         date.setTime(date.getTime() + (minutes * 60 * 1000));
         document.cookie = "cart" + "=" + response + ";path=/;expires=" + date.toGMTString();
-        // bootstrap_alert.success("Proizvod uklonjen iz korpe.");
+        getCartTotal();
+        $.ajax({
+            url: '/getCollapseInnerCartHtml',
+            type: 'GET'
+        })
+            .done(function (response) {
+                $('.collapse').html(response);
+            });
     }).fail(function (error) {
-        // bootstrap_alert.warning("Greska prilikom uklanjanja iz korpe.");
     });
 }
 
-/*bootstrap_alert = {};
+function getCartTotal() {
+    event.preventDefault();
 
-
-bootstrap_alert.warning = function(message) {
-    $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+    $.ajax({
+        url: window.getCartTotalUrl,
+        type: 'GET',
+        xhrFields: {
+            withCredentials: true
+        }
+    }).done(function (response) {
+        $("span#cartTotalInMenu").html(response);
+    }).fail(function (error) {
+    });
 }
 
-bootstrap_alert.success = function(message) {
-    $('#alert_placeholder').html('<div class="alert alert-success" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
-}*/
+function refreshCollapsedCart() {
+    if(!$("#collapseCarpet").length) {
+        return;
+    }
+
+        $.ajax({
+        url: '/getCollapseInnerCartHtml',
+        type: 'GET'
+    })
+        .done(function (response) {
+            $('.collapse').html(response);
+        });
+}
+
 

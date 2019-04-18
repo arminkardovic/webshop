@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Product;
 use Backpack\CRUD\CrudTrait;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -103,6 +104,11 @@ class User extends Authenticatable
     public function cartRules()
     {
         return $this->belongsToMany('App\Models\CartRule');
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany('App\Models\Product', 'favorites', 'user_id', 'product_id');
     }
 
 

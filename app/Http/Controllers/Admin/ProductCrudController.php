@@ -202,6 +202,27 @@ class ProductCrudController extends CrudController
                 'placeholder' => trans( 'product.hint_category'),
                 'minimum_input_length' => 0
             ],
+            [
+                'name' => 'subcategory_id',
+                'label' => trans('category.subcategory'),
+                'placeholder' => trans('category.select.subcategory'),
+                'minimum_input_length' => 0,
+                'type' => 'subcategory_create',
+                'attribute' => 'name',
+                'model_custom' => 'App\Models\Category',
+                'key_value' => "subcategory_id",
+                'old_value' => "id",
+                'data_source' => route('subcategories-ajax'),
+                'tab' => trans('product.general_tab')
+            ],
+            [
+                'name' => 'weight',
+                'label' => trans('product.weight'),
+                'type' => 'number',
+                'suffix' => ' ' . trans('product.grams'),
+                // TAB
+                'tab' => trans('product.general_tab')
+            ],
             /** PRICE  */
 
 
@@ -364,20 +385,6 @@ class ProductCrudController extends CrudController
                 'tab' => trans('specificprice.specific_price')
             ],
 
-        ]);
-
-        $this->crud->addField([
-            'name' => 'subcategory_id',
-            'label' => trans('category.subcategory'),
-            'placeholder' => trans('category.select.subcategory'),
-            'minimum_input_length' => 0,
-            'type' => 'subcategory_create',
-            'attribute' => 'name',
-            'model_custom' => 'App\Models\Category',
-            'key_value' => "subcategory_id",
-            'old_value' => "id",
-            'data_source' => route('subcategories-ajax'),
-            'tab' => trans('product.general_tab')
         ]);
 
         $this->crud->addField([
@@ -587,6 +594,14 @@ class ProductCrudController extends CrudController
         $id = $this->crud->request->id;
         $product = $product->findOrFail($id);
 
+        $sizes = AttributeValue::query()->whereHas('attribute', function ($query) {
+            $query->where('name', '=', 'Size');
+        })->get();
+
+        $colors = AttributeValue::query()->whereHas('attribute', function ($query) {
+            $query->where('name', '=', 'Color');
+        })->get();
+
         $redirect_location = parent::updateCrud($request);
 
         // Add product attributes ids and values in attribute_product_value (pivot)
@@ -595,13 +610,35 @@ class ProductCrudController extends CrudController
         ProductPrice::where("product_id", "=", $id)->delete();
         $productPrices = json_decode($request->get('productPricesField'));
 
+        $sku = sprintf('%01d', $product->category_id);
+        $sku .= sprintf('%02d', $product->subcategory_id);
+        $sku .= sprintf('%04d', $product->id);
+
         foreach ($productPrices as $productPrice) {
+            $sizeCode = '00';
+            $colorCode = '00';
+
+            foreach ($productPrice->attributeValuesIds as $attributeValue) {
+                foreach ($colors as $color) {
+                    if($color->id == $attributeValue) {
+                        $colorCode = sprintf('%02d', $color->id);
+                    }
+                }
+
+                foreach ($sizes as $size) {
+                    if($size->id == $attributeValue) {
+                        $sizeCode = sprintf('%02d', $size->id);
+                    }
+                }
+            }
+
             sort($productPrice->attributeValuesIds);
             $product = new ProductPrice([
                 'product_id' => $id,
                 'stock' => $productPrice->stock,
                 'price' => $productPrice->price,
-                'attributes' => $productPrice->attributeValuesIds
+                'attributes' => $productPrice->attributeValuesIds,
+                'sku' => $sku . $sizeCode . $colorCode
             ]);
             $product->save();
         }

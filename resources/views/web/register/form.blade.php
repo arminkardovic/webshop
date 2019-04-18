@@ -49,6 +49,24 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row{{ $errors->has('gender') ? ' has-error' : '' }}">
+
+                                <label for="gender" class="col-md-4 col-form-label text-md-right">Gender</label>
+                                <div class="col-md-6">
+                                    <select id="gender" data-show-content="true" name="gender" class="form-control border">
+                                        <option value="">Select</option>
+                                        <option value="1">Men</option>
+                                        <option value="2">Women</option>
+                                    </select>
+                                    @if ($errors->has('gender'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('gender') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+
+                            </div>
+
                             <div class="form-group row{{ $errors->has('password') ? ' has-error' : '' }}">
                                 <label for="email_address" class="col-md-4 col-form-label text-md-right">Password</label>
                                 <div class="col-md-6">
@@ -85,9 +103,34 @@
                                     Register
                                 </button>
                             </div>
-                    </div>
                     </form>
                 </div>
+                    <div class="social-sign-up">
+
+                        <h4>Sign up with...</h4>
+
+                        <div class="social-links-container">
+                            <a href="#" id="signup-facebook" class="social-link facebook">
+                                <div class="connect facebook qa-sign-up-with-facebook" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                    <div class="text"><span>Facebook</span></div>
+                                </div>
+                            </a>
+                            <a href="#" id="signup-google" class="social-link gplus">
+                                <div class="connect google qa-sign-up-with-google" aria-label="Google">
+                                    <i class="fab fa-google"></i>
+                                    <div class="text"><span>Google</span></div>
+                                </div>
+                            </a>
+                            <a href="#" id="signup-twitter" class="social-link twitter">
+                                <div class="connect twitter qa-sign-up-with-twitter" aria-label="Twitter">
+                                    <i class="fab fa-twitter-square"></i>
+                                    <div class="text"><span>Twitter</span></div>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
             </div>
         </div>
     </div>

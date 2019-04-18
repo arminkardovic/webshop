@@ -31,6 +31,7 @@ class Product extends Model
         'description',
         'description_sr',
         'price',
+        'weight',
         'tax_id',
         'stock',
         'active',

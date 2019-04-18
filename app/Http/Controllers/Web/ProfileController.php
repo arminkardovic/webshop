@@ -13,6 +13,7 @@ use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use App\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -21,7 +22,7 @@ class ProfileController extends BaseController
 {
     public function index(Request $request)
     {
-        $user = \Auth::user();
+        $user = User::with('favorites')->find(\Auth::id());
         return view("web.profile.index", [
             'user' => $user
         ]);

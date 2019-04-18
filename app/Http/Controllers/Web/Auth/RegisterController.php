@@ -79,6 +79,7 @@ class RegisterController extends BaseController
             'email' => 'required|email|max:255|unique:' . $users_table,
             'password' => 'required|min:6|confirmed',
             'address' => 'required|max:255',
+            'gender'  => 'required|in:1,2'
         ]);
     }
 
@@ -97,6 +98,7 @@ class RegisterController extends BaseController
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'address' => $data['address'],
+            'gender'  => $data['gender'],
             'activation_code' => str_random(15) . time()
         ]);
     }
