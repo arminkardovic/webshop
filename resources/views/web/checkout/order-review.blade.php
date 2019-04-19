@@ -1,5 +1,15 @@
 <div class="col-md-4">
     <div class="carpet-items">
+        @if(session()->has('message'))
+            <div class="alert alert-success">
+                {{ session()->get('message') }}
+            </div>
+        @endif
+        @if(session()->has('warning'))
+            <div class="alert alert-warning">
+                {{ session()->get('warning') }}
+            </div>
+        @endif
         <div id="alert_placeholder"></div>
         <h3>ORDER REVIEW</h3>
 
@@ -84,9 +94,12 @@
             </tr>
         </table>
 
-        <button id="checkout-button-place-order" type="button" class="btn btn-primary submit">CHECKOUT TO
-            PAYMENT
-        </button>
+        <form action="{{route('makeOrder')}}" method="POST">
+            {!! csrf_field() !!}
+            <button id="checkout-button-place-order" type="submit" class="btn btn-primary submit" @if(sizeof($cart) == 0) disabled @endif>CHECKOUT TO
+                PAYMENT
+            </button>
+        </form>
 
     </div>
 </div>

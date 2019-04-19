@@ -633,14 +633,14 @@ class ProductCrudController extends CrudController
             }
 
             sort($productPrice->attributeValuesIds);
-            $product = new ProductPrice([
+            $productPriceToSave = new ProductPrice([
                 'product_id' => $id,
                 'stock' => $productPrice->stock,
                 'price' => $productPrice->price,
                 'attributes' => $productPrice->attributeValuesIds,
                 'sku' => $sku . $sizeCode . $colorCode
             ]);
-            $product->save();
+            $productPriceToSave->save();
         }
 
 

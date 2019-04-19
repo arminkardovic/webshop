@@ -11,6 +11,8 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\BaseController;
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductPrice;
 use Illuminate\Database\Query\Builder;
@@ -97,6 +99,7 @@ class CheckoutController extends BaseController
 
             $item->price = $price->price;
             $item->stock = $price->stock;
+            $item->sku = $price->sku;
             $item->combinationInfo = array();
 
             foreach ($products as $product) {
@@ -152,5 +155,63 @@ class CheckoutController extends BaseController
         }
 
         return $cartTotal;
+    }
+
+
+    public function makeOrder(Request $request)
+    {
+        $cart = $this->getCartObject();
+
+        $orderItems = array();
+        $shippingPrice = 20.00;
+        $totalPrice = 0;
+
+        foreach ($cart as $item) {
+            if ($item->quantity > $item->stock) {
+                return back()->with('warning', 'One of the items has ran out of stock.');
+            }
+
+            $attributes = array();
+
+            foreach ($item->combinationInfo as $combinationInfoItem) {
+                $attribute = array();
+                $attribute['name'] = $combinationInfoItem->name;
+                $attribute['value'] = $combinationInfoItem->value;
+                $attributes[] = $attribute;
+            }
+
+            $orderItems[] = [
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'sku' => $item->sku,
+                'name' => $item->product_name,
+                'name_sr' => $item->product_name_sr,
+                'attributes'    => json_encode($attributes)
+            ];
+
+            $totalPrice += $item->price * $item->quantity;
+        }
+
+        $order = new Order([
+            'status_id' => 1,
+        ]);
+        $order->user_id = 1;
+        $order->carrier_id = 1;
+        $order->currency_id = 1;
+        $order->total = $totalPrice;
+        $order->total_shipping = $shippingPrice;
+        $order->save();
+
+        foreach($orderItems as $key => $item) {
+            $item['order_id'] = $order->id;
+            $orderItems[$key] = $item;
+        }
+
+        OrderItem::insert($orderItems);
+
+        $cookie = Cookie::forget('cart');
+
+        return back()->with('message', 'Congratulations! An order has been made.')->withCookie($cookie);
     }
 }

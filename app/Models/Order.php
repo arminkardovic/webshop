@@ -89,9 +89,9 @@ class Order extends Model
     */
     public function total()
     {
-        return decimalFormat($this->products->sum(function ($product) {
-            return $product->pivot->price_with_tax * $product->pivot->quantity;
-        }, 0) + $this->carrier->price);
+        return decimalFormat($this->items->sum(function ($item) {
+            return $item->price * $item->quantity;
+        }, 0) + $this->total_shipping);
     }
 
     /*
@@ -139,9 +139,9 @@ class Order extends Model
         return $this->hasOne('App\Models\Currency', 'id', 'currency_id');
     }
 
-    public function products()
+    public function items()
     {
-        return $this->belongsToMany('App\Models\Product')->withPivot(['name', 'sku', 'price', 'price_with_tax',  'quantity']);
+        return $this->hasMany('App\Models\OrderItem', 'order_id', 'id');
     }
 
     /*
