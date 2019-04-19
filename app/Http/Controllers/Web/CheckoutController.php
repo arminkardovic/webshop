@@ -28,22 +28,38 @@ class CheckoutController extends BaseController
         ]);
     }
 
-    public function getCollapseCartHtml(Request $request) {
+    public function previewWithCouponCode(Request $request)
+    {
+        $cart = $this->getCartObject();
+
+        return view('web.checkout.index', [
+            'cart' => $cart,
+            'coupon' => (object)[
+                'discount' => 10,
+                'code' => 'G2359FJSAF62'
+            ]
+        ]);
+    }
+
+    public function getCollapseCartHtml(Request $request)
+    {
         $cart = $this->getCartObject();
         return view('web.cart.collapse', [
             'cart' => $cart
         ]);
     }
 
-    public function getCollapseInnerCartHtml(Request $request) {
+    public function getCollapseInnerCartHtml(Request $request)
+    {
         $cart = $this->getCartObject();
         return view('web.cart.collapse-inner', [
             'cart' => $cart
         ]);
     }
 
-    private function getCartObject() {
-        if(!Cookie::has('cart')) {
+    private function getCartObject()
+    {
+        if (!Cookie::has('cart')) {
             return [];
         }
 
@@ -52,8 +68,8 @@ class CheckoutController extends BaseController
 
         $productIds = array();
 
-        foreach($cart as $item) {
-            if(!in_array($item->product_id, $productIds)) {
+        foreach ($cart as $item) {
+            if (!in_array($item->product_id, $productIds)) {
                 $productIds[] = $item->product_id;
             }
         }
@@ -62,8 +78,9 @@ class CheckoutController extends BaseController
 
         $products = Product::findMany($productIds);
 
-        foreach($products as $product) { /** @var Product $product */
-            if(!in_array($product->attribute_set_id, $attributeSetIds)) {
+        foreach ($products as $product) {
+            /** @var Product $product */
+            if (!in_array($product->attribute_set_id, $attributeSetIds)) {
                 $attributeSetIds[] = $product->attribute_set_id;
             }
         }
@@ -73,7 +90,7 @@ class CheckoutController extends BaseController
         })->get();
 
 
-        foreach($cart as $key => $item) {
+        foreach ($cart as $key => $item) {
             $joinedCombination = '[' . join(', ', $item->combination) . ']';
 
             $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
@@ -82,8 +99,8 @@ class CheckoutController extends BaseController
             $item->stock = $price->stock;
             $item->combinationInfo = array();
 
-            foreach($products as $product) {
-                if($product->id == $item->product_id) {
+            foreach ($products as $product) {
+                if ($product->id == $item->product_id) {
                     $item->product_name = $product->name;
                     $item->product_name_sr = $product->name_sr;
                     $item->featureImage = $product->featureImage;
@@ -91,10 +108,11 @@ class CheckoutController extends BaseController
                 }
             }
 
-            foreach($attributes as $attribute) { /** @var Attribute $attribute */
-                foreach($attribute->values as $value) {
-                    foreach($item->combination as $combinationItem) {
-                        if($combinationItem == $value->id) {
+            foreach ($attributes as $attribute) {
+                /** @var Attribute $attribute */
+                foreach ($attribute->values as $value) {
+                    foreach ($item->combination as $combinationItem) {
+                        if ($combinationItem == $value->id) {
                             $combinationInfoItem = new \stdClass();
                             $combinationInfoItem->id = $value->id;
                             $combinationInfoItem->name = $attribute->name;
@@ -116,7 +134,8 @@ class CheckoutController extends BaseController
     /**
      * @return int|mixed
      */
-    public function getCartTotal() {
+    public function getCartTotal()
+    {
         $cartTotal = 0;
 
         if (Cookie::has('cart')) {

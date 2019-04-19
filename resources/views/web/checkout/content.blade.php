@@ -67,16 +67,17 @@
                     </div>
 
                 </div>
-
                 <div class="gift-card">
-                    <h3>Apply Gift Card</h3>
+                    <h3>Apply Coupon code</h3>
+                    <form action="{{ route('previewWithCouponCode') }}" method="POST">
                     <div class="input-group">
-
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">APPLY</button>
+                            {!! csrf_field() !!}
+                            <input type="text" class="form-control" name="couponcode" @isset($coupon) value="{{$coupon->code}}" @endisset>
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">APPLY</button>
                          </span>
                     </div>
+                    </form>
                 </div>
             </div>
             @include("web.checkout.order-review", ['cart' => $cart])

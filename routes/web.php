@@ -17,6 +17,7 @@ Route::get('/getCollapseInnerCartHtml', 'CheckoutController@getCollapseInnerCart
 Route::get('/getCartTotal', 'CheckoutController@getCartTotal')->name('getCartTotal');
 Route::post('/addToFavorites', 'ProductController@addToFavorites')->name('addToFavorites')->middleware('api');
 Route::post('/removeFromFavorites', 'ProductController@removeFromFavorites')->name('removeFromFavorites')->middleware('api');
+Route::post('/checkout', 'CheckoutController@previewWithCouponCode')->name('previewWithCouponCode');
 
 Route::get('/{category}', "CategoryController@index");
 

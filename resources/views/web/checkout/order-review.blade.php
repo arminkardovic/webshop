@@ -1,9 +1,9 @@
 <div class="col-md-4">
     <div class="carpet-items">
-        <div id = "alert_placeholder"></div>
+        <div id="alert_placeholder"></div>
         <h3>ORDER REVIEW</h3>
 
-        <table class="table span12">
+        <table class="table span12" id="order-items">
 
             <thead>
             <tr>
@@ -14,16 +14,22 @@
             </thead>
 
             <tbody>
+            @php($multiplier = 1)
+            @isset($coupon)
+            @php($multiplier = (100 - $coupon->discount) / 100)
+            @endisset
             @php($total = 0)
 
             @foreach($cart as $key => $item)
+                @php($item->price = $item->price * $multiplier)
                 @php($total += $item->quantity * $item->price)
                 <tr id="row-{{$key}}">
                     <td class="product-info">
-                        <a href="" onclick="removeFromCart(event, {{json_encode($item)}}, {{$key}})" class="close"><i class="fas fa-times"></i></a>
+                        <a href="" onclick="removeFromCart(event, {{json_encode($item)}}, {{$key}})" class="close"><i
+                                    class="fas fa-times"></i></a>
                         <a href="{{route("product.single", ["id"=>$item->product_id])}}">
-                        <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : 'img/blackgirl.jpg'}}"
-                             alt="">
+                            <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : 'img/blackgirl.jpg'}}"
+                                 alt="">
                         </a>
                         <div class="product-name">{{Lang::locale() == 'en' ? $item->product_name : $item->product_name_sr}}</div>
                         <div class="atributes">
@@ -108,6 +114,17 @@
                 document.cookie = "cart" + "=" + response + ";path=/;expires=" + date.toGMTString();
                 bootstrap_alert.success("Proizvod uklonjen iz korpe.");
                 getCartTotal();
+
+                var totalPrice = 0;
+                $("#order-items tbody tr").each(function () {
+                    var quantity = parseInt($(this).find("input[name=quantity]").val());
+                    var price = parseFloat($(this).find("span.value").html());
+                    totalPrice += quantity * price;
+                });
+
+                $(".sub span.value").html(totalPrice.toFixed(2));
+                var shippingPrice = parseFloat($(".shipping-total span.value").html());
+                $(".total-price span.value").html((totalPrice + shippingPrice).toFixed(2));
             }).fail(function (error) {
                 bootstrap_alert.warning("Greska prilikom uklanjanja iz korpe.");
             });
@@ -115,12 +132,12 @@
 
         bootstrap_alert = {};
 
-        bootstrap_alert.warning = function(message) {
-            $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+        bootstrap_alert.warning = function (message) {
+            $('#alert_placeholder').html('<div class="alert alert-danger" role="alert"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>')
         }
 
-        bootstrap_alert.success = function(message) {
-            $('#alert_placeholder').html('<div class="alert alert-success" role="alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+        bootstrap_alert.success = function (message) {
+            $('#alert_placeholder').html('<div class="alert alert-success" role="alert"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>')
         }
 
     </script>

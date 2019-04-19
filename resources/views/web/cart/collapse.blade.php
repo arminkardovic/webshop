@@ -8,7 +8,7 @@
             @php($total += $item->quantity * $item->price)
         <li id="li-{{$key}}">
             <a href="{{route("product.single", ["id"=>$item->product_id])}}">
-            <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : 'img/blackgirl.jpg'}}" alt="">
+            <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : \Illuminate\Support\Facades\URL::to('img/blackgirl.jpg')}}" alt="">
             </a>
             <div class="carpet-item-content">
 
@@ -18,7 +18,7 @@
 
                     <a href="" onclick="removeFromCartCollapse(event, {{json_encode($item)}}, {{$key}}, '{{route('removeFromCart')}}')" class="close"><i class="fas fa-times"></i></a>
 
-                    <a href="" class="edit"><i class="fas fa-pencil-alt"></i></a>
+                    <a href="{{route('checkout')}}" class="edit"><i class="fas fa-pencil-alt"></i></a>
 
                 </div>
 
