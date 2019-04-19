@@ -123,7 +123,18 @@ class CategoryCrudController extends CrudController
                 'name'  => 'slug',
                 'label' => trans('category.slug'),
                 'type'  => 'text',
-            ]
+            ],
+            [
+                'name' => 'attribute_set_id',
+                'label' => trans('attribute.attribute_sets'),
+                'type' => 'select2',
+                'entity' => 'attributes',
+                'attribute' => 'name',
+                'model' => "App\Models\AttributeSet",
+                'attributes' => [
+                    'id' => 'attributes-set'
+                ],
+            ],
         ]);
     }
 
