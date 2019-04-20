@@ -76,6 +76,11 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'create_notification_template'],
             ['name' => 'update_notification_template'],
             ['name' => 'delete_notification_template'],
+
+            ['name' => 'list_coupon_codes'],
+            ['name' => 'create_coupon_codes'],
+            ['name' => 'update_coupon_codes'],
+            ['name' => 'delete_coupon_codes'],
     	];
 
     	DB::table('permissions')->insert($permissions);

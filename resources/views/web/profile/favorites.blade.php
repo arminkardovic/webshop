@@ -1,5 +1,6 @@
 <div class="tab-pane" id="favorites" role="tabpanel">
 
+    @if(sizeof($user->favorites) > 0)
     <table class="table span12">
 
         <thead>
@@ -63,6 +64,7 @@
 
         </tbody>
     </table>
+        @endisset
 
 </div>
 

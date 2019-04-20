@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\BaseController;
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\CouponCode;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -34,12 +35,20 @@ class CheckoutController extends BaseController
     {
         $cart = $this->getCartObject();
 
+        $code = $request->get('couponcode');
+
+        $coupon = CouponCode::where('code', $code)->first();
+
+        if($coupon == null) {
+            return view('web.checkout.index', [
+                'cart' => $cart,
+                'couponWarning' => 'Coupon not found.'
+            ]);
+        }
+
         return view('web.checkout.index', [
             'cart' => $cart,
-            'coupon' => (object)[
-                'discount' => 10,
-                'code' => 'G2359FJSAF62'
-            ]
+            'coupon' => $coupon
         ]);
     }
 

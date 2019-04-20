@@ -70,13 +70,19 @@
                 <div class="gift-card">
                     <h3>Apply Coupon code</h3>
                     <form action="{{ route('previewWithCouponCode') }}" method="POST">
-                    <div class="input-group">
+                        @isset($couponWarning)
+                            <div class="alert alert-warning">
+                                {{ $couponWarning }}
+                            </div>
+                        @endisset
+                        <div class="input-group">
                             {!! csrf_field() !!}
-                            <input type="text" class="form-control" name="couponcode" @isset($coupon) value="{{$coupon->code}}" @endisset>
+                            <input type="text" class="form-control" name="couponcode"
+                                   @isset($coupon) value="{{$coupon->code}}" @endisset>
                             <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">APPLY</button>
                          </span>
-                    </div>
+                        </div>
                     </form>
                 </div>
             </div>

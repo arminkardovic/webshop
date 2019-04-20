@@ -18,6 +18,8 @@
     </ul>
 
     <ul class="carpet-menu">
+            <li><a style="line-height: 60px;" href="{{route('lang', 'sr')}}"><img src="{{asset('img/sr.png')}}" alt="Srpski">Srpski</a></li>
+            <li><a style="line-height: 60px;" href="{{route('lang', 'en')}}"><img src="{{asset('img/en.png')}}" alt="English">English</a></li>
         <li class="login">
             <a
                     @auth href="{{url('/profile')}}" @endauth

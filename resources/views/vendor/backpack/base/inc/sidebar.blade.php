@@ -45,7 +45,10 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/clients') }}"><i
                                     class="fa fa-users"></i> <span>{{ trans('client.clients') }}</span></a></li>
                 @endcan
-
+                @can('list_coupon_codes')
+                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/coupon-codes') }}"><i
+                                    class="fa fa-bars"></i> <span>{{ trans('coupon_code.coupon_codes') }}</span></a></li>
+                @endcan
                 @can('list_clients')
                     <li>
                         <a href="{{ url(config('backpack.base.route_prefix', 'admin').'/gift-cards') }}">
