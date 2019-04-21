@@ -1,43 +1,54 @@
-<div class="carpet-items">
+@if(sizeof($cart) === 0)
+    <h4>{{trans('cart.empty')}}</h4>
+@endif
+@if(sizeof($cart) !== 0)
+    <div class="carpet-items">
         @php($total = 0)
 
         @foreach($cart as $key => $item)
             @php($total += $item->quantity * $item->price)
-        <li id="li-{{$key}}">
-            <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : \Illuminate\Support\Facades\URL::to('img/blackgirl.jpg')}}" alt="">
-            <div class="carpet-item-content">
+            <li id="li-{{$key}}">
+                <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : \Illuminate\Support\Facades\URL::to('img/blackgirl.jpg')}}"
+                     alt="">
+                <div class="carpet-item-content">
 
-                <div class="heading">
+                    <div class="heading">
 
-                    <span class="price">{{$item->price}} €</span>
+                        <span class="price">{{$item->price}} €</span>
 
-                    <a href="" onclick="removeFromCartCollapse(event, {{json_encode($item)}}, {{$key}}, '{{route('removeFromCart')}}')" class="close"><i class="fas fa-times"></i></a>
+                        <a href=""
+                           onclick="removeFromCartCollapse(event, {{json_encode($item)}}, {{$key}}, '{{route('removeFromCart')}}')"
+                           class="close"><i class="fas fa-times"></i></a>
 
-                    <a href="{{route('checkout')}}" class="edit"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{{route('checkout')}}" class="edit"><i class="fas fa-pencil-alt"></i></a>
+
+                    </div>
+
+                    <h4>{{Lang::locale() == 'en' ? $item->product_name : $item->product_name_sr}}</h4>
+
+                    @foreach($item->combinationInfo as $combinationInfoItem)
+                        <span class="attribute">{{$combinationInfoItem->name}}: <span
+                                    class="value">{{$combinationInfoItem->value}}</span></span>
+                    @endforeach
+
 
                 </div>
-
-                <h4>{{Lang::locale() == 'en' ? $item->product_name : $item->product_name_sr}}</h4>
-
-                @foreach($item->combinationInfo as $combinationInfoItem)
-                <span class="attribute">{{$combinationInfoItem->name}}: <span class="value">{{$combinationInfoItem->value}}</span></span>
-                @endforeach
-
-
-            </div>
-        </li>
+            </li>
         @endforeach
     </div>
 
     <div class="payment-info">
 
-        <div class="subtotal">Ukupno proizvodi: <span class="value">{{number_format((float)$total, 2, '.', '')}} €</span></div>
+        <div class="subtotal">Ukupno proizvodi: <span class="value">{{number_format((float)$total, 2, '.', '')}}
+                €</span></div>
 
         <div class="delivering">Dostava u Hrvatskoj: <span class="value">20 €</span></div>
 
         <div class="total">UKUPNO ZA PLAĆANJE: <span>{{number_format((float)$total + 20, 2, '.', '')}} €</span></div>
 
-        <button type="button" class="btn btn-primary submit" onclick="window.location.replace('/checkout')" @if(sizeof($cart) == 0) disabled @endif>PLATI</button>
+        <button type="button" class="btn btn-primary submit" onclick="window.location.replace('/checkout')"
+                @if(sizeof($cart) == 0) disabled @endif>PLATI
+        </button>
 
         <div class="payment-way">Moguci nacini placanja:
 
@@ -67,3 +78,4 @@
         <div class="delivery-time">Očekivano vrijeme dostave: <span>5 dana</span></div>
 
     </div>
+@endif

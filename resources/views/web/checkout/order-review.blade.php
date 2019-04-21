@@ -1,5 +1,6 @@
 <div class="col-md-4">
     <div class="carpet-items">
+        <form action="{{route('makeOrder')}}" method="POST">
         @if(session()->has('message'))
             <div class="alert alert-success">
                 {{ session()->get('message') }}
@@ -12,7 +13,6 @@
         @endif
         <div id="alert_placeholder"></div>
         <h3>ORDER REVIEW</h3>
-
         <table class="table span12" id="order-items">
 
             <thead>
@@ -53,7 +53,7 @@
                     <td class="product-qty">
                         <input type="number" class="input-text qty text" step="1" min="1"
                                max="{{$item->stock}}"
-                               name="quantity"
+                               name="quantity-{{$key}}"
                                value="{{$item->quantity}}" title="Qty" size="4" pattern="[0-9]*"
                                inputmode="numeric">
 
@@ -94,7 +94,6 @@
             </tr>
         </table>
 
-        <form action="{{route('makeOrder')}}" method="POST">
             {!! csrf_field() !!}
             <button id="checkout-button-place-order" type="submit" class="btn btn-primary submit" @if(sizeof($cart) == 0) disabled @endif>CHECKOUT TO
                 PAYMENT
@@ -120,11 +119,16 @@
                     withCredentials: true
                 }
             }).done(function (response) {
-                $("tr#row-" + key).remove();
+                $("#order-items tbody tr#row-" + key).remove();
                 var date = new Date();
                 var minutes = 30;
                 date.setTime(date.getTime() + (minutes * 60 * 1000));
                 document.cookie = "cart" + "=" + response + ";path=/;expires=" + date.toGMTString();
+                var length = $("#order-items tbody tr").length;
+                if(length == 0) {
+                    location.reload();
+                    return;
+                }
                 bootstrap_alert.success("Proizvod uklonjen iz korpe.");
                 getCartTotal();
 

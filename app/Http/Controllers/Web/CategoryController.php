@@ -20,6 +20,9 @@ class CategoryController extends BaseController
     {
         $category = Category::where("slug", "=", $category)->first();
         /** @var Category $category */
+        if($category == null) {
+            abort(404);
+        }
         $products = $category->allProducts();
 
         /** @var */

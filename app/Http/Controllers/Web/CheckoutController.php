@@ -16,6 +16,10 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use App\Notifications\OrderCreated;
+use App\Notifications\OrderCreatedAdmin;
+use App\User;
+use DB;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -171,11 +175,18 @@ class CheckoutController extends BaseController
     {
         $cart = $this->getCartObject();
 
+        if(sizeof($cart) == 0) {
+            return back();
+        }
+
         $orderItems = array();
         $shippingPrice = 20.00;
         $totalPrice = 0;
 
-        foreach ($cart as $item) {
+        foreach ($cart as $key => $item) {
+            $item->quantity = (int) $request->get("quantity-$key");
+            $cart[$key] = $item;
+
             if ($item->quantity > $item->stock) {
                 return back()->with('warning', 'One of the items has ran out of stock.');
             }
@@ -220,6 +231,17 @@ class CheckoutController extends BaseController
         OrderItem::insert($orderItems);
 
         $cookie = Cookie::forget('cart');
+
+        foreach ($cart as $item) {
+            $joinedCombination = '[' . join(', ', $item->combination) . ']';
+            $price = DB::table('product_prices')->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")
+                ->where('product_id', '=', $item->product_id)->decrement('stock', $item->quantity);
+        }
+
+
+        \Auth::user()->notify(new OrderCreated($order));
+        $admins = User::role('Administrator')->get();
+        \Notification::send($admins, new OrderCreatedAdmin($order));
 
         return back()->with('message', 'Congratulations! An order has been made.')->withCookie($cookie);
     }

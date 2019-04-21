@@ -70,6 +70,26 @@
 
 @section('after_scripts')
 <script>
+    $( window ).on( 'hashchange', function( e ) {
+        openTabByHash();
+    } );
+
+    $(document).ready(function () {
+        openTabByHash();
+    });
+
+    function openTabByHash() {
+        var hash = window.location.hash;
+        hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            $(this).tab('show');
+            var scrollmem = $('body').scrollTop();
+            window.location.hash = this.hash;
+            $('html,body').scrollTop(scrollmem);
+        });
+    }
+
     function removeFromFavorites(event, productId) {
         event.preventDefault();
         $.ajax({

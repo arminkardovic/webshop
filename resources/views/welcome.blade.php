@@ -1,4 +1,4 @@
-@extends('web.layout')
+@extends('web.layout-homepage')
 
 @section("content")
     @include("web.homepage.main-slideshow", [])

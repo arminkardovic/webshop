@@ -8,5 +8,6 @@ return [
     'name' => 'Name',
     'slug' => 'Slug',
     'subcategory' => 'Subcategory',
-    'select.subcategory' => 'Select subcategory'
+    'select.subcategory' => 'Select subcategory',
+    'noproducts'        => 'Nije pronadjen nijedan proizvod.'
 ];

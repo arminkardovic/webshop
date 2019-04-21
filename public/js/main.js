@@ -28,10 +28,12 @@ jQuery(document).ready(function ($) {
     });
 
     $("#collapseCartButton").click(function () {
-        if(window.requestPath == 'checkout') {
+        if (window.requestPath == 'checkout') {
             return;
         }
-        if($("#collapseCarpet").length) {
+
+
+        if ($("#collapseCarpet").length) {
             $('.collapse').collapse();
             return;
         }
@@ -42,9 +44,13 @@ jQuery(document).ready(function ($) {
         })
             .done(function (response) {
                 $('.container-fluid, .container').append(response);
+                if(window.requestPath === '/') {
+                    $('.collapse').first().css('margin-top', '142px');
+                }
                 $('.collapse').collapse();
             });
     });
+
 
 });// End Custom jQuery
 
@@ -93,11 +99,11 @@ function getCartTotal() {
 }
 
 function refreshCollapsedCart() {
-    if(!$("#collapseCarpet").length) {
+    if (!$("#collapseCarpet").length) {
         return;
     }
 
-        $.ajax({
+    $.ajax({
         url: '/getCollapseInnerCartHtml',
         type: 'GET'
     })
