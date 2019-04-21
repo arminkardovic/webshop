@@ -22,14 +22,15 @@ class CategoryController extends BaseController
         /** @var Category $category */
         $products = $category->allProducts();
 
-        /** @var  */
+        /** @var */
         $products->whereHas('prices', function ($q) use ($request) {
 
             $q->where('stock', '>', 0);
 
             foreach ($request->except('price') as $param) {
-                if($param == 'all') continue;
+                if ($param == 'all') continue;
 
+                $param = is_array($param) ? $param : [];
                 $param = array_map(function ($value) {
                     return intval($value);
                 }, $param);
@@ -50,10 +51,10 @@ class CategoryController extends BaseController
             }
         });
 
-        if($request->has('price')) {
-            if($request->get('price') == 'asc') {
+        if ($request->has('price')) {
+            if ($request->get('price') == 'asc') {
                 $products->orderBy('price', 'asc');
-            }else{
+            } else {
                 $products->orderBy('price', 'desc');
             }
         }
