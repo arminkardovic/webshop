@@ -14,7 +14,8 @@
         "laravel/socialite": "3.2",
         "backpack/menucrud": "^1.0",
         "backpack/pagemanager": "^1.1",
-        "barryvdh/laravel-ide-helper": "^2.6"
+        "barryvdh/laravel-ide-helper": "^2.6",
+        "torann/geoip": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

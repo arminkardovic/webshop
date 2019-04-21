@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.32 on 2019-04-16 07:55:00.
+ * Generated for Laravel 5.5.32 on 2019-04-20 11:07:08.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1963,7 +1963,7 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Get a unique identifier for the register session value.
+         * Get a unique identifier for the auth session value.
          *
          * @return string 
          * @static 

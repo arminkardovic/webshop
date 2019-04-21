@@ -164,6 +164,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+
+
         /*
          * Package Service Providers...
          */
@@ -188,6 +190,8 @@ return [
         Backpack\MenuCRUD\MenuCRUDServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         Backpack\PageManager\PageManagerServiceProvider::class,
+
+        \Torann\GeoIP\GeoIPServiceProvider::class,
     ],
 
     /*
@@ -236,6 +240,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+
+        'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
     ],
 
 ];

@@ -1,4 +1,6 @@
 <?php
+
+Route::get('/language/{lang}','LanguageController@change')->name('lang');
 Route::get('/user/verify/{token}', 'Auth\RegisterController@activateUser');
 Route::get('/user/resend/{email}', 'Auth\RegisterController@resendActivationMail');
 
