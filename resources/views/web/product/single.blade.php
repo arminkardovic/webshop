@@ -34,7 +34,8 @@
 
                         <p class="price">
                     <span class="price-amount amount">
-                        {{$product->formatted_price}}
+                        {{--{{$product->formatted_price}}--}}
+                        {{\App\Utils\PriceUtils::formatPrice($product->price)}} {{Auth::user()->locationSettings->currency}}
                     </span>
                         </p>
                         {{ Form::open(array('id' => 'attributes_form', 'method' => 'get')) }}

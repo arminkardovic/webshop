@@ -35,6 +35,25 @@
             <label for="address">Address</label>
             <input type="text" class="form-control" id="address" name="address" value="{{$user->address}}">
         </div>
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" data-show-content="true" name="gender" class="form-control border">
+                <option value="">Select</option>
+                <option value="1" @if(isset($user->gender) && $user->gender == 1) selected @endif>Men</option>
+                <option value="2" @if(isset($user->gender) && $user->gender == 2) selected @endif>Women</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="location_settings_id">Country</label>
+            <select id="location_settings_id" data-show-content="true" name="location_settings_id" class="form-control border">
+                @foreach($countries as $country)
+                    <option {{$user->location_settings_id == $country->id ? ' selected' : ''}} value="{{$country->id}}">{{$country->country}}</option>
+                @endforeach
+            </select>
+        </div>
+
+
+
 
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

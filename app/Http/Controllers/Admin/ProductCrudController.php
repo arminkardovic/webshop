@@ -135,7 +135,7 @@ class ProductCrudController extends CrudController
     {
         $this->crud->addFields([
 
-            [
+/*            [
                 'name' => 'sku',
                 'label' => trans('product.sku'),
                 'type' => 'text',
@@ -144,7 +144,7 @@ class ProductCrudController extends CrudController
                 ],
                 // TAB
                 'tab' => trans('product.general_tab'),
-            ],
+            ],*/
 
             [
                 'name' => 'name',

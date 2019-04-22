@@ -33,7 +33,7 @@ class ProductRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
             'weight'            => 'required|numeric|between:0,999999',
             'price'             => 'required|numeric|between:0,9999999999999.999999',
             'category_id'        => 'required',
-            'subcategory_id'        => 'required',
+//            'subcategory_id'        => 'required',
            // 'sku'               => 'required|unique:products,sku'.($this->request->get('id') ? ','.$this->request->get('id') : ''),
             'stock'             => 'required|numeric',
             'active'            => 'required|numeric|between:0,1',

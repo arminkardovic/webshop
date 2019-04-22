@@ -17,7 +17,6 @@ class OrderItem extends Model
         'price',
         'sku' .
         'attributes',
-        'meta',
         'name',
         'name_sr'
     ];

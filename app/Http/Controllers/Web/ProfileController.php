@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\BaseController;
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\LocationSettings;
 use App\Models\Product;
 use App\Models\ProductPrice;
 use App\User;
@@ -23,8 +24,10 @@ class ProfileController extends BaseController
     public function index(Request $request)
     {
         $user = User::with('favorites')->find(\Auth::id());
+        $countries = LocationSettings::query()->orderBy('country')->get();
         return view("web.profile.index", [
-            'user' => $user
+            'user' => $user,
+            'countries' => $countries
         ]);
     }
 

@@ -34,6 +34,7 @@ class User extends Authenticatable
         'birthday',
         'gender',
         'active',
+        'location_settings_id'
     ];
 
     protected $hidden = [
@@ -111,6 +112,10 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Product', 'favorites', 'user_id', 'product_id');
     }
 
+    public function locationSettings()
+    {
+        return $this->hasOne('App\Models\LocationSettings', 'id', 'location_settings_id');
+    }
 
     /*
     |--------------------------------------------------------------------------

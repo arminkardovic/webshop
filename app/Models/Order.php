@@ -33,7 +33,9 @@ class Order extends Model
         'total_shipping',
         'total_shipping_tax',
         'total',
-        'total_tax'
+        'total_tax',
+        'meta'
+
     ];
     // protected $hidden = [];
     // protected $dates = [];
@@ -55,11 +57,11 @@ class Order extends Model
     {
         return [
             'userSalutation' => $this->user->salutation,
-            'userName'       => $this->user->name,
-            'userEmail'      => $this->user->email,
-            'total'          => $this->total(),
-            'carrier'        => $this->carrier()->first()->name,
-            'status'         => $this->status->name
+            'userName' => $this->user->name,
+            'userEmail' => $this->user->email,
+            'total' => $this->total(),
+            'carrier' => $this->carrier()->first()->name,
+            'status' => $this->status->name
         ];
     }
 
@@ -72,7 +74,7 @@ class Order extends Model
     {
         parent::boot();
 
-        static::updating(function($order) {
+        static::updating(function ($order) {
             // Send notification when order status was changed
             $oldStatus = $order->getOriginal();
             if ($order->status_id != $oldStatus['status_id'] && $order->status->notification != 0) {
@@ -90,8 +92,8 @@ class Order extends Model
     public function total()
     {
         return decimalFormat($this->items->sum(function ($item) {
-            return $item->price * $item->quantity;
-        }, 0) + $this->total_shipping);
+                return $item->price * $item->quantity;
+            }, 0) + $this->total_shipping);
     }
 
     /*

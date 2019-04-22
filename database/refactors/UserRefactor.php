@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Database\Schema\Blueprint;
+
 /**
  * Created by PhpStorm.
  * User: Armin
@@ -16,13 +19,16 @@ class UserRefactor
      */
     public function run()
     {
-        /*** DODAVANJE KOLONA **/
-        /*
-        if (!Schema::hasColumn('users', 'mobile_phone')) {
-            Schema::table('users', function ($table) {
-                $table->string('mobile_phone')->after('cp_ext')->nullable();
+
+        if (!Schema::hasColumn('users', 'location_settings_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->integer('location_settings_id')->unsigned()->nullable();
+                $table->foreign('location_settings_id')
+                    ->references('id')->on('location_settings')
+                    ->onDelete('no action')
+                    ->onUpdate('no action');
             });
         }
-        */
+
     }
 }
