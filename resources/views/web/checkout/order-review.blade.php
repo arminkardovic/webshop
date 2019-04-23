@@ -59,8 +59,7 @@
 
                     </td>
                     <td class="product-price">
-                        <span class="value">{{$item->price}}</span>
-                        <span class="value-symbol">€</span>
+                        <span class="value">{{\App\Utils\PriceUtils::formattedPrice($item->price)}}</span>
                     </td>
                 </tr>
             @endforeach
@@ -72,24 +71,21 @@
             <tr class="totals sub">
                 <th>Cart Subtotal</th>
                 <td class="amount">
-                    <span class="value">{{number_format((float)$total, 2, '.', '')}}</span>
-                    <span class="value-symbol">€</span>
+                    <span class="value">{{\App\Utils\PriceUtils::formattedPrice($total)}}</span>
                 </td>
             </tr>
 
             <tr class="shipping-total">
                 <th>Shipping</th>
                 <td class="amount">
-                    <span class="value">20.00</span>
-                    <span class="value-symbol">€</span>
+                    <span class="value">{{\App\Utils\PriceUtils::formattedPrice(20)}}</span>
                 </td>
             </tr>
 
             <tr class="total-price">
                 <th>Total price</th>
                 <td class="amount">
-                    <span class="value">{{number_format((float)$total + 20, 2, '.', '')}}</span>
-                    <span class="value-symbol">€</span>
+                    <span class="value">{{\App\Utils\PriceUtils::formattedPrice($total + 20)}}</span>
                 </td>
             </tr>
         </table>
@@ -119,29 +115,31 @@
                     withCredentials: true
                 }
             }).done(function (response) {
-                $("#order-items tbody tr#row-" + key).remove();
+                // $("#order-items tbody tr#row-" + key).remove();
                 var date = new Date();
                 var minutes = 30;
                 date.setTime(date.getTime() + (minutes * 60 * 1000));
                 document.cookie = "cart" + "=" + response + ";path=/;expires=" + date.toGMTString();
-                var length = $("#order-items tbody tr").length;
-                if(length == 0) {
-                    location.reload();
-                    return;
-                }
-                bootstrap_alert.success("Proizvod uklonjen iz korpe.");
-                getCartTotal();
+
+                // bootstrap_alert.success("Proizvod uklonjen iz korpe.");
+
+                location.reload();
+
+     /*           getCartTotal();
 
                 var totalPrice = 0;
                 $("#order-items tbody tr").each(function () {
                     var quantity = parseInt($(this).find("input[name=quantity]").val());
-                    var price = parseFloat($(this).find("span.value").html());
+                    var price = parseFloat($(this).find("span.value").html().split(" ")[0]);
+                    console.log(price);
                     totalPrice += quantity * price;
                 });
 
+                console.log("RAZMAK");
                 $(".sub span.value").html(totalPrice.toFixed(2));
-                var shippingPrice = parseFloat($(".shipping-total span.value").html());
-                $(".total-price span.value").html((totalPrice + shippingPrice).toFixed(2));
+                console.log($(".shipping-total span.value").html().split(" ")[0]);
+                var shippingPrice = parseFloat($(".shipping-total span.value").html().split(" ")[0]);
+                $(".total-price span.value").html((totalPrice + shippingPrice).toFixed(2));*/
             }).fail(function (error) {
                 bootstrap_alert.warning("Greska prilikom uklanjanja iz korpe.");
             });

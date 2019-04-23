@@ -4,7 +4,7 @@
 <p class="price">
                     <span class="price-amount amount">
                         @if(isset($productPrice) && isset($productPrice->price) && $productPrice->stock > 0)
-                            {{$productPrice->price}} &euro;
+                            {{\App\Utils\PriceUtils::formattedPrice($productPrice->price)}}
                         @else
                         {{$product->formatted_price}}
                         @endif

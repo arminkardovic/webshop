@@ -4,10 +4,14 @@ namespace App\Http\Middleware;
 
 use App;
 use App\Models\LocationSettings;
+use App\Models\ProductPrice;
 use App\User;
+use App\Utils\PriceUtils;
 use Auth;
 use Closure;
+use Cookie;
 use Torann\GeoIP\Facades\GeoIP;
+use View;
 
 class LocationSettingsMiddleware
 {
@@ -21,6 +25,11 @@ class LocationSettingsMiddleware
     public function handle($request, Closure $next)
     {
         $this->setLanguage();
+        if(!Auth::guest()) {
+            View::share([
+                'cartTotal' => $this->getCartTotal()
+            ]);
+        }
         return $next($request);
     }
 
@@ -64,5 +73,27 @@ class LocationSettingsMiddleware
 
         $locationSettings = LocationSettings::where('country', $country)->first();
         return $locationSettings;
+    }
+
+    /**
+     * @return int|mixed
+     */
+    private function getCartTotal() {
+        $cartTotal = 0;
+
+        if (Cookie::has('cart')) {
+            $cart = Cookie::get('cart');
+            $cart = json_decode($cart);
+
+            foreach ($cart as $item) {
+                $joinedCombination = '[' . join(', ', $item->combination) . ']';
+
+                $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
+
+                $cartTotal += $price->price * $item->quantity;
+            }
+        }
+
+        return PriceUtils::formattedPrice($cartTotal);
     }
 }

@@ -49,6 +49,10 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/coupon-codes') }}"><i
                                     class="fa fa-bars"></i> <span>{{ trans('coupon_code.coupon_codes') }}</span></a></li>
                 @endcan
+                @can('list_products')
+                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/gifts') }}"><i
+                                    class="fa fa-list"></i> <span>{{ trans('gift.gifts') }}</span></a></li>
+                @endcan
                 @can('list_clients')
                     <li>
                         <a href="{{ url(config('backpack.base.route_prefix', 'admin').'/gift-cards') }}">

@@ -21,6 +21,7 @@ Route::post('/addToFavorites', 'ProductController@addToFavorites')->name('addToF
 Route::post('/removeFromFavorites', 'ProductController@removeFromFavorites')->name('removeFromFavorites')->middleware('api');
 Route::post('/checkout', 'CheckoutController@previewWithCouponCode')->name('previewWithCouponCode');
 Route::post('/makeOrder', 'CheckoutController@makeOrder')->name('makeOrder');
+Route::get('/getInfoForCombination', 'ProductController@getInfoForCombination')->name('getInfoForCombination');
 
 Route::get('/{category}', "CategoryController@index");
 

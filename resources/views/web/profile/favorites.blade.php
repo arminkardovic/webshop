@@ -35,8 +35,7 @@
                 </td>
 
                 <td class="product-price">
-                    <span class="value">{{$product->price}}</span>
-                    <span class="value-symbol">€</span>
+                    <span class="value">{{\App\Utils\PriceUtils::formattedPrice($product->price)}}</span>
                 </td>
             </tr>
         @endforeach

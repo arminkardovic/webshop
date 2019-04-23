@@ -18,5 +18,17 @@ class ProductRefactor
             });
         }
 
+        if (!Schema::hasColumn('products', 'gift')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->boolean('gift')->default(0);
+            });
+        }
+
+
+        if (Schema::hasColumn('products', 'attribute_set_id')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->integer('attribute_set_id')->unsigned()->nullable()->default(null)->change();
+            });
+        }
     }
 }

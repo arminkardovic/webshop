@@ -28,6 +28,7 @@ CRUD::resource('specific-prices', 'SpecificPriceCrudController');
 CRUD::resource('notification-templates', 'NotificationTemplateCrudController');
 CRUD::resource('gift-cards', 'GiftCardCrudController');
 CRUD::resource('coupon-codes', 'CouponCodeCrudController');
+CRUD::resource('gifts', 'GiftCrudController');
 
 // Clone Products
 Route::post('products/clone', ['as' => 'clone.product', 'uses' => 'ProductCrudController@cloneProduct']);

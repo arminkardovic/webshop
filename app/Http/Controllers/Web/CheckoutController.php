@@ -19,6 +19,7 @@ use App\Models\ProductPrice;
 use App\Notifications\OrderCreated;
 use App\Notifications\OrderCreatedAdmin;
 use App\User;
+use App\Utils\PriceUtils;
 use DB;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -167,7 +168,7 @@ class CheckoutController extends BaseController
             }
         }
 
-        return $cartTotal;
+        return PriceUtils::formattedPrice($cartTotal);
     }
 
 

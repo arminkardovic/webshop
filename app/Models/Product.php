@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\PriceUtils;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 use Illuminate\Support\Facades\Lang;
@@ -35,6 +36,7 @@ class Product extends Model
         'tax_id',
         'stock',
         'active',
+        'gift',
         'created_at',
         'updated_at'
     ];
@@ -128,12 +130,14 @@ class Product extends Model
 
     }
 
-    public function getNameTranslatedAttribute() {
+    public function getNameTranslatedAttribute()
+    {
         return Lang::locale() == 'en' ? $this->name : $this->name_sr;
     }
 
-    public function getDescriptionTranslatedAttribute() {
-       return Lang::locale() == 'en' ? $this->description : $this->description_sr;
+    public function getDescriptionTranslatedAttribute()
+    {
+        return Lang::locale() == 'en' ? $this->description : $this->description_sr;
     }
 
 
@@ -152,7 +156,26 @@ class Product extends Model
 
     public function getFormattedPriceAttribute()
     {
-        return decimalFormat($this->price) . " €";
+        if (\Auth::guest())
+            $currency = 'EUR';
+        else
+            $currency = \Auth::user()->locationSettings->currency;
+
+        switch ($currency) {
+            case 'EUR':
+                $currency = '€';
+                break;
+            case 'USD':
+                $currency = '$';
+                break;
+            case 'RSD':
+                $currency = 'din.';
+                break;
+            default;
+                break;
+        }
+
+        return PriceUtils::formatPrice($this->price) . ' ' . $currency;
     }
 
     /*

@@ -19,7 +19,7 @@
 
                         <div class="heading">
 
-                            <span class="price">{{$item->price}} €</span>
+                            <span class="price">{{\App\Utils\PriceUtils::formattedPrice($item->price)}}</span>
 
                             <a href=""
                                onclick="removeFromCartCollapse(event, {{json_encode($item)}}, {{$key}}, '{{route('removeFromCart')}}')"
@@ -44,12 +44,11 @@
 
         <div class="payment-info">
 
-            <div class="subtotal">Ukupno proizvodi: <span class="value">{{number_format((float)$total, 2, '.', '')}}
-                    €</span></div>
+            <div class="subtotal">Ukupno proizvodi: <span class="value">{{\App\Utils\PriceUtils::formattedPrice($total)}}</span></div>
 
-            <div class="delivering">Dostava u Hrvatskoj: <span class="value">20 €</span></div>
+            <div class="delivering">Dostava u Hrvatskoj: <span class="value">{{\App\Utils\PriceUtils::formattedPrice(20)}}</span></div>
 
-            <div class="total">UKUPNO ZA PLAĆANJE: <span>{{number_format((float)$total + 20, 2, '.', '')}} €</span>
+            <div class="total">UKUPNO ZA PLAĆANJE: <span>{{\App\Utils\PriceUtils::formattedPrice($total + 20)}}</span>
             </div>
 
             <button type="button" class="btn btn-primary submit" onclick="window.location.replace('/checkout')"

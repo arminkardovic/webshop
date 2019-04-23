@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ProductRequest as StoreRequest;
-use App\Http\Requests\ProductRequest as UpdateRequest;
+use App\Http\Requests\GiftRequest as StoreRequest;
+use App\Http\Requests\GiftRequest as UpdateRequest;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductGroup;
 use App\Models\ProductImage;
@@ -16,7 +17,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ProductCrudController extends CrudController
+class GiftCrudController extends CrudController
 {
 
     public function setUp()
@@ -27,11 +28,11 @@ class ProductCrudController extends CrudController
         |--------------------------------------------------------------------------
         */
         $this->crud->setModel("App\Models\Product");
-        $this->crud->setRoute("admin/products");
-        $this->crud->setEntityNameStrings('product', 'products');
+        $this->crud->setRoute("admin/gifts");
+        $this->crud->setEntityNameStrings('gift', 'gifts');
 
 
-        $this->crud->addClause('where', 'gift', '=', '0');
+        $this->crud->addClause('where', 'gift', '=', '1');
 
         /*
         |--------------------------------------------------------------------------
@@ -61,10 +62,6 @@ class ProductCrudController extends CrudController
             [
                 'name' => 'price',
                 'label' => trans('product.price'),
-            ],
-            [
-                'name' => 'stock',
-                'label' => trans('product.stock'),
             ],
             [
                 'name' => 'active',
@@ -153,17 +150,13 @@ class ProductCrudController extends CrudController
                 'name' => 'name',
                 'label' => trans('product.name'),
                 'type' => 'text',
-
-                // TAB
-                'tab' => trans('product.general_tab'),
+                'tab' => trans('product.general_tab')
             ],
             [
                 'name' => 'name_sr',
                 'label' => trans('product.name_sr'),
                 'type' => 'text',
-
-                // TAB
-                'tab' => trans('product.general_tab'),
+                'tab' => trans('product.general_tab')
             ],
             [
                 'name' => 'description',
@@ -176,8 +169,7 @@ class ProductCrudController extends CrudController
                     'autoGrow_bottomSpace' => 50,
                     'removePlugins' => 'resize,maximize',
                 ],
-                // TAB
-                'tab' => trans('product.general_tab'),
+                'tab' => trans('product.general_tab')
             ],
             [
                 'name' => 'description_sr',
@@ -190,8 +182,7 @@ class ProductCrudController extends CrudController
                     'autoGrow_bottomSpace' => 50,
                     'removePlugins' => 'resize,maximize',
                 ],
-                // TAB
-                'tab' => trans('product.general_tab'),
+                'tab' => trans('product.general_tab')
             ],
             [
                 'label' => trans('category.category'),
@@ -204,38 +195,6 @@ class ProductCrudController extends CrudController
                 'tab' => trans('product.general_tab'),
                 'placeholder' => trans( 'product.hint_category'),
                 'minimum_input_length' => 0
-            ],
-            [
-                'name' => 'subcategory_id',
-                'label' => trans('category.subcategory'),
-                'placeholder' => trans('category.select.subcategory'),
-                'minimum_input_length' => 0,
-                'type' => 'subcategory_create',
-                'attribute' => 'name',
-                'model_custom' => 'App\Models\Category',
-                'key_value' => "subcategory_id",
-                'old_value' => "id",
-                'data_source' => route('subcategories-ajax'),
-                'tab' => trans('product.general_tab')
-            ],
-            [
-                'name' => 'weight',
-                'label' => trans('product.weight'),
-                'type' => 'number',
-                'suffix' => ' ' . trans('product.grams'),
-                // TAB
-                'tab' => trans('product.general_tab')
-            ],
-            /** PRICE  */
-
-
-            [
-                'name' => 'stock',
-                'label' => trans('product.stock'),
-                'type' => 'number',
-
-                // TAB
-                'tab' => trans('product.price_tab'),
             ],
             [
                 'name' => 'price_with_vat',
@@ -279,8 +238,7 @@ class ProductCrudController extends CrudController
                 'attributes' => [
                     'id' => 'tax',
                 ],
-                // TAB
-                'tab' => trans('product.price_tab'),
+                'tab' => trans('product.price_tab')
             ],
 
 
@@ -294,31 +252,7 @@ class ProductCrudController extends CrudController
                     '0' => trans('common.inactive'),
                     '1' => trans('common.active'),
                 ],
-
-                // TAB
-                'tab' => trans('product.general_tab'),
-            ],
-            [
-                'name' => 'attribute_set_id',
-                'label' => trans('attribute.attribute_sets'),
-                'type' => 'select2',
-                'entity' => 'attributes',
-                'attribute' => 'name',
-                'model' => "App\Models\AttributeSet",
-                'attributes' => [
-                    'id' => 'attributes-set'
-                ],
-
-                // TAB
-                'tab' => trans('product.attributes_tab'),
-            ],
-            [
-                'name' => 'attribute_types',
-                'label' => trans('attribute.name'),
-                'type' => 'product_attributes',
-
-                // TAB
-                'tab' => trans('product.attributes_tab'),
+                'tab' => trans('product.general_tab')
             ]
         ]);
 
@@ -332,79 +266,10 @@ class ProductCrudController extends CrudController
             'filesize' => 5, // maximum file size in MB
 
             // TAB
-            'tab' => trans('product.product_images_tab'),
-        ], 'update');
-
-        $this->crud->addField([
-            'name' => 'product_group',
-            'type' => 'product_group',
-            'model' => 'App\Models\Product',
-
-            // TAB
-            'tab' => trans('product.group_tab'),
+            'tab' => trans('product.product_images_tab')
         ], 'update');
 
 
-        // Specific price functionality
-        $this->crud->addFields([
-            [
-                'name' => 'discount_type',
-                'label' => trans('specificprice.discount_type'),
-                'model' => 'App\Models\SpecificPrice',
-                'entity' => 'specificPrice',
-                'type' => 'enum_discount_simple',
-
-                // TAB
-                'tab' => trans('specificprice.specific_price')
-            ],
-            [
-                'name' => 'reduction',
-                'label' => trans('specificprice.reduction'),
-                'model' => 'App\Models\SpecificPrice',
-                'attribute' => 'reduction',
-                'type' => 'number',
-
-
-                // TAB
-                'tab' => trans('specificprice.specific_price')
-            ],
-            [
-                'name' => 'start_date',
-                'label' => trans('specificprice.start_date'),
-                'type' => 'datetime_picker',
-                'model' => 'App\Models\SpecificPrice',
-                'attribute' => 'start_date',
-                // TAB
-                'tab' => trans('specificprice.specific_price')
-            ],
-            [
-                'name' => 'expiration_date',
-                'label' => trans('specificprice.expiration_date'),
-                'type' => 'datetime_picker',
-                'model' => 'App\Models\SpecificPrice',
-                'attribute' => 'expiration_date',
-
-                // TAB
-                'tab' => trans('specificprice.specific_price')
-            ],
-
-        ]);
-
-        $this->crud->addField([
-            'name' => 'product_prices',
-            'label' => trans('product.prices'),
-            'type' => 'product_prices_create',
-            'tab' => trans('product.product_prices_tab'),
-        ], 'create'
-        );
-
-        $this->crud->addField([
-            'name' => 'product_prices',
-            'label' => trans('product.prices'),
-            'type' => 'product_prices_update',
-            'tab' => trans('product.product_prices_tab'),
-        ], 'update'
-        );
 
     }
 
@@ -473,23 +338,20 @@ class ProductCrudController extends CrudController
 
     public function store(StoreRequest $request, ProductGroup $productGroup, SpecificPrice $specificPrice)
     {
-;
 
-        $sizes = AttributeValue::query()->whereHas('attribute', function ($query) {
-            $query->where('name', '=', 'Size');
-        })->get();
-
-        $colors = AttributeValue::query()->whereHas('attribute', function ($query) {
-            $query->where('name', '=', 'Color');
-        })->get();
-
-
-        // Create group entry
         $productGroup = $productGroup->create();
 
+        $category = Category::where('name', 'Gift')->first();
+
         $request->merge([
-            'group_id' => $productGroup->id
+            'group_id' => $productGroup->id,
+            'category_id' => $category->id,
+            'subcategory_id' => $category->id,
+            'weight' => 100,
+            'gift'  => 1
         ]);
+
+
 
         $redirect_location = parent::storeCrud($request);
 
@@ -509,48 +371,8 @@ class ProductCrudController extends CrudController
 
         $productId = $this->crud->entry->id;
 
-
-        //insert product prices
-        $productPrices = json_decode($request->get('productPricesField'));
         $product = Product::find($productId); /** @var Product $product */
 
-
-        $sku = sprintf('%01d', $product->category_id);
-        $sku .= sprintf('%02d', $product->subcategory_id);
-        $sku .= sprintf('%04d', $product->id);
-
-
-
-
-
-        foreach ($productPrices as $productPrice) {
-            $sizeCode = '00';
-            $colorCode = '00';
-
-            foreach ($productPrice->attributeValuesIds as $attributeValue) {
-                foreach ($colors as $color) {
-                    if($color->id == $attributeValue) {
-                        $colorCode = sprintf('%02d', $color->id);
-                    }
-                }
-
-                foreach ($sizes as $size) {
-                    if($size->id == $attributeValue) {
-                        $sizeCode = sprintf('%02d', $size->id);
-                    }
-                }
-            }
-
-            sort($productPrice->attributeValuesIds);
-            $productPriceToSave = new ProductPrice([
-                'product_id' => $productId,
-                'stock' => $productPrice->stock,
-                'price' => $productPrice->price,
-                'attributes' => $productPrice->attributeValuesIds,
-                'sku' => $sku . $sizeCode . $colorCode
-            ]);
-            $productPriceToSave->save();
-        }
 
         $reduction = $request->input('reduction');
         $discountType = $request->input('discount_type');

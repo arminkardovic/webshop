@@ -41,7 +41,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="60" height="60" viewBox="0 0 60 60">
                     <image xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA1CAMAAAAwEZgGAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABC1BMVEUAAABmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADNmADMAAAC/BBH2AAAAV3RSTlMAED5cWkIYFGalrXAWhb21s7i7mQIwv1dK/Itsr6dxeWkO+mcFDRIDVOXBOMnD02oK241iZHbNlXxg2R4Iq48EgxxOGqlYsZNWUki5oSIgDN+biXS3LCqOQT7+AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEgAACxIB0t1+/AAAASpJREFUSMftkNtagkAURjdBGVhRHsooOh+IwAzKMi0jzaws8VD/+79JomHDZ59w0V2suzUzi80M0QTcDM8LHvzsHIWTmBcxRkouhAaLwJK8vOIhp4B0JuR8dhVrP5ZbRzIkkKGwuoHNkEDFVjBQ/zoQsc3qDsRfDnG7Pt6d9/YPDo+GcMfaCfTTzHibG00Vdf/ZDTOPaejiGVHhHJZtX4ywL4vAFf+ttqDkUbz2d0u2hZsClWFUmN+7xV2V0XtIjFUMlMkJvoOIB1ZzwUurcKiGOrsk4ZFVLTCB6qgNgga79IQSq02kWW0Mg8A3EqlnVl9es8H5E8F04iAO4iAO4uDfBA5a0YPWIHiDGT0w8U5t1+10FSsCSrfjum2iXh+R6fe8OR9NISLaJ9EXqNh/gFHNLAIAAAAASUVORK5CYII=" x="7" y="3" width="48" height="53"/>
                 </svg>
-                <div class="carpet-value"><span id="cartTotalInMenu">{{$cartTotal}}</span> <span class="valute">€</span></div>
+                @auth<div class="carpet-value"><span id="cartTotalInMenu">{{$cartTotal}}</span></div>@endauth
             </a>
 
         </li>

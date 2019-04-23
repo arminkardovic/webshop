@@ -5,12 +5,15 @@ namespace App\Providers;
 use App;
 use App\Models\AttributeSet;
 use App\Models\LocationSettings;
+use App\Models\ProductPrice;
 use App\User;
+use App\Utils\PriceUtils;
 use Auth;
 use Cookie;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Torann\GeoIP\Facades\GeoIP;
+use View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
     }
 
     /**
