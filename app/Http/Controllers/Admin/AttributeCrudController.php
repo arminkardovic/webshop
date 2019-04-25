@@ -29,11 +29,15 @@ class AttributeCrudController extends CrudController
         */
         $this->crud->addColumns([
             [
-                'name'  => 'name',
+                'name' => 'name',
                 'label' => trans('attribute.name'),
             ],
             [
-                'name'  => 'type',
+                'name' => 'name_sr',
+                'label' => trans('attribute.name_sr'),
+            ],
+            [
+                'name' => 'type',
                 'label' => trans('attribute.type'),
             ]
         ]);
@@ -94,48 +98,53 @@ class AttributeCrudController extends CrudController
     {
         $this->crud->addFields([
             [
-                'name'  => 'name',
+                'name' => 'name',
                 'label' => trans('attribute.name'),
-                'type'  => 'text',
+                'type' => 'text',
             ],
             [
-                'name'    => 'type',
-                'label'   => trans('attribute.type'),
-                'type'    => 'select_from_array',
+                'name' => 'name_sr',
+                'label' => trans('attribute.name_sr'),
+                'type' => 'text',
+            ],
+            [
+                'name' => 'type',
+                'label' => trans('attribute.type'),
+                'type' => 'select_from_array',
                 'options' => [
-                    '0'                 => '--',
-                    'text'              => trans('attribute.text'),
-                    'textarea'          => trans('attribute.textarea'),
-                    'date'              => trans('attribute.date'),
-                    'multiple_select'   => trans('attribute.multiple_select'),
-                    'dropdown'          => trans('attribute.dropdown'),
-                    'media'             => trans('attribute.media')
+                    '0' => '--',
+                    'text' => trans('attribute.text'),
+                    'textarea' => trans('attribute.textarea'),
+                    'date' => trans('attribute.date'),
+                    'multiple_select' => trans('attribute.multiple_select'),
+                    'dropdown' => trans('attribute.dropdown'),
+                    'media' => trans('attribute.media')
                 ],
                 'attributes' => [
                     'id' => 'attribute_type'
                 ]
             ],
             [
-                'name'          => "media",
-                'label'         => trans('attribute.default')." ".trans('attribute.media'),
-                'type'          => 'attribute_type_image',
-                'default'       => 'default.png',
-                'disk'          => 'attributes',
-                'upload'        => true,
-                'aspect_ratio'  => 0,
+                'name' => "media",
+                'label' => trans('attribute.default') . " " . trans('attribute.media'),
+                'type' => 'attribute_type_image',
+                'default' => 'default.png',
+                'disk' => 'attributes',
+                'upload' => true,
+                'aspect_ratio' => 0,
             ],
             [
-                'name'  => 'attribute_types',
+                'name' => 'attribute_types',
                 'label' => trans('attribute.name'),
-                'type'  => 'attribute_types',
+                'type' => 'attribute_types',
             ]
         ]);
     }
 
-	public function store(StoreRequest $request)
-	{
+    public function store(StoreRequest $request)
+    {
         $redirect_location = parent::storeCrud();
-        $entryId           = $this->crud->entry->id;
+        $entryId = $this->crud->entry->id;
 
         // Define Storage disk for media attribute type
         $disk = "attributes";
@@ -143,47 +152,60 @@ class AttributeCrudController extends CrudController
         // Init attributeValue array
         $attributeValue = [];
 
-        switch($request->type) {
+        switch ($request->type) {
             case 'text':
             case 'textarea':
             case 'date':
                 $attributeValue = [
                     'attribute_id' => $entryId,
-                    'value'        => $request->{$request->type}
+                    'value' => $request->{$request->type}
                 ];
-            break;
+                break;
 
             case 'multiple_select':
             case 'dropdown':
+                $value = '';
+                $valueSr = '';
+                $i = 1;
+                dd($request->all());
                 foreach ($request->option as $option) {
-                    $attributeValue[] = [
-                        'attribute_id' => $entryId,
-                        'value'        => $option
-                    ];
+                    if ($i % 2 == 0) {
+                        $valueSr = $option;
+                        $attributeValue[] = [
+                            'attribute_id' => $entryId,
+                            'value' => $value,
+                            'value_sr' => $valueSr
+                        ];
+                    } else {
+                        $value = $option;
+                    }
+                    $i++;
                 }
-            break;
+                break;
 
             case 'media':
                 if (starts_with($request->media, 'data:image')) {
                     // 1. Make the image
                     $image = \Image::make($request->media);
                     // 2. Generate a filename.
-                    $filename = md5($request->media.time()).'.jpg';
+                    $filename = md5($request->media . time()) . '.jpg';
                     // 3. Store the image on disk.
                     \Storage::disk($disk)->put($filename, $image->stream());
                     // 4. Save the path to attributes_value
                     $attributeValue = ['attribute_id' => $entryId, 'value' => $filename];
                 }
-            break;
+                break;
         }
 
+
+        dd($attributeValue);
         $insert_attribute_values = AttributeValue::insert($attributeValue);
 
         return $redirect_location;
-	}
+    }
 
-	public function update(UpdateRequest $request, AttributeValue $attributeValue)
-	{
+    public function update(UpdateRequest $request, AttributeValue $attributeValue)
+    {
         // Define Storage disk for media attribute type
         $disk = 'attributes';
 
@@ -192,7 +214,7 @@ class AttributeCrudController extends CrudController
             case 'textarea':
             case 'date':
                 $attributeValue->where('attribute_id', $request->id)->update(['value' => $request->{$request->type}]);
-            break;
+                break;
 
             case 'multiple_select':
             case 'dropdown':
@@ -209,7 +231,7 @@ class AttributeCrudController extends CrudController
 
                     $insert_new_option = $attributeValue->insert($attribute_values);
                 }
-            break;
+                break;
 
             case 'media':
                 if (starts_with($request->media, 'data:image')) {
@@ -222,17 +244,17 @@ class AttributeCrudController extends CrudController
                     // 2. Make the image
                     $image = \Image::make($request->media);
                     // 3. Generate a filename.
-                    $filename = md5($request->media.time()).'.jpg';
+                    $filename = md5($request->media . time()) . '.jpg';
                     // 4. Store the image on disk.
                     \Storage::disk($disk)->put($filename, $image->stream());
                     // 5. Update image filename to attributes_value
                     $attributeValue->where('attribute_id', $request->id)->update(['value' => $filename]);
                 }
-            break;
+                break;
         }
 
         $redirect_location = parent::updateCrud();
 
         return $redirect_location;
-	}
+    }
 }

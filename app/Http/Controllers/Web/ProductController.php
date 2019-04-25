@@ -16,6 +16,13 @@ class ProductController extends BaseController
 
 
         $product = Product::findOrFail($id);
+
+        if($product->gift) {
+            return view("web.product.gift", [
+                "product" => $product
+            ]);
+        }
+
         $attributes = Attribute::with('values')->whereHas('sets', function ($q) use ($product) {
             $q->where('id', $product->attribute_set_id);
         })->get();

@@ -18,41 +18,43 @@ class CategoryController extends BaseController
 {
     public function index(Request $request, $category)
     {
-        $category = Category::where("slug", "=", $category)->first();
+        $category = Category::where("slug", "=", $category)->orWhere('slug_sr', '=', $category)->first();
         /** @var Category $category */
         if($category == null) {
             abort(404);
         }
         $products = $category->allProducts();
 
-        /** @var */
-        $products->whereHas('prices', function ($q) use ($request) {
+        if($category->slug != 'gift') {
+            /** @var */
+            $products->whereHas('prices', function ($q) use ($request) {
 
-            $q->where('stock', '>', 0);
+                $q->where('stock', '>', 0);
 
-            foreach ($request->except('price') as $param) {
-                if ($param == 'all') continue;
+                foreach ($request->except('price') as $param) {
+                    if ($param == 'all') continue;
 
-                $param = is_array($param) ? $param : [];
-                $param = array_map(function ($value) {
-                    return intval($value);
-                }, $param);
+                    $param = is_array($param) ? $param : [];
+                    $param = array_map(function ($value) {
+                        return intval($value);
+                    }, $param);
 
-                $q->where(function ($q) use ($param) {
-                    $i = 0;
-                    foreach ($param as $attributeValueId) {
-                        if ($i == 0) {
-                            $q->whereRaw("JSON_CONTAINS(`product_prices`.`attributes`, '$attributeValueId')");
-                        } else {
-                            $q->orWhereRaw("JSON_CONTAINS(`product_prices`.`attributes`, '$attributeValueId')");
+                    $q->where(function ($q) use ($param) {
+                        $i = 0;
+                        foreach ($param as $attributeValueId) {
+                            if ($i == 0) {
+                                $q->whereRaw("JSON_CONTAINS(`product_prices`.`attributes`, '$attributeValueId')");
+                            } else {
+                                $q->orWhereRaw("JSON_CONTAINS(`product_prices`.`attributes`, '$attributeValueId')");
+                            }
+                            $i++;
                         }
-                        $i++;
-                    }
-                });
+                    });
 
 
-            }
-        });
+                }
+            });
+        }
 
         if ($request->has('price')) {
             if ($request->get('price') == 'asc') {

@@ -9,7 +9,7 @@
                 <div class="color-filter">
 
 
-                    <h3>{{$attribute->name}}</h3>
+                    <h3>{{$attribute->nameTranslated}}</h3>
 
 
                     <div class="form-check">
@@ -20,7 +20,7 @@
                     @foreach($attribute->values as $attributeValue)
                         <div class="form-check">
                             <label class="form-check-label @if(isset($old['attribute-' . $attribute->id]) && is_array($old['attribute-' . $attribute->id]) && in_array($attributeValue->id, $old['attribute-' . $attribute->id])) active-filter @endif">
-                                <input type="checkbox" class="form-check-input" name="attribute-{{$attribute->id}}[]" value="{{$attributeValue->id}}" @if(isset($old['attribute-' . $attribute->id]) && is_array($old['attribute-' . $attribute->id]) && in_array($attributeValue->id, $old['attribute-' . $attribute->id])) checked @endif>{{$attributeValue->value}}
+                                <input type="checkbox" class="form-check-input" name="attribute-{{$attribute->id}}[]" value="{{$attributeValue->id}}" @if(isset($old['attribute-' . $attribute->id]) && is_array($old['attribute-' . $attribute->id]) && in_array($attributeValue->id, $old['attribute-' . $attribute->id])) checked @endif>{{$attributeValue->valueTranslated}}
                             </label>
                         </div>
                     @endforeach

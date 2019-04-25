@@ -19,54 +19,84 @@ class ProductController extends BaseController
     public function addToCart(Request $request, CookieJar $cookieJar)
     {
         $productId = $request->get('product_id');
-        $combination = $request->get('combination');
         $quantity = $request->get('quantity');
-        sort($combination);
 
-        $attributeValueIds = '[' . join(', ', $combination) . ']';
+        if ($request->has('email')) {
+            $email = $request->get('email');
 
-        $productPrice = ProductPrice::query()->where('product_id', '=', $productId)->whereRaw("CAST(`product_prices`.`attributes` as char) = '$attributeValueIds'")->first();
-
-        $encrypter = app(\Illuminate\Contracts\Encryption\Encrypter::class);
+            $encrypter = app(\Illuminate\Contracts\Encryption\Encrypter::class);
 
 
-        $cart = array();
+            $cart = array();
 
-        if(Cookie::has('cart')) {
-            $cartCookie = $encrypter->decrypt(Cookie::get('cart'));
-            $cart = json_decode($cartCookie);
-        }
-
-        $alreadyInCart = false;
-
-        foreach($cart as $key => $item) {
-            if($item->product_id == $productId && $item->combination == $combination) {
-                $item->quantity += $quantity;
-                $cart[$key] = $item;
-                $alreadyInCart = true;
-
-                if($productPrice->stock < $item->quantity) {
-                    return response('', 400);
-                }
+            if (Cookie::has('cart')) {
+                $cartCookie = $encrypter->decrypt(Cookie::get('cart'));
+                $cart = json_decode($cartCookie);
             }
-        }
 
-        if($alreadyInCart == false) {
+
             $cart[] = [
                 'product_id' => $productId,
                 'quantity' => $quantity,
-                'combination' => $combination
+                'email' => $email
             ];
 
-            if($productPrice->stock < $quantity) {
-                return response('', 400);
+
+            $cookieJar->queue(cookie('cart', json_encode($cart), 30));
+
+            return $encrypter->encrypt(json_encode($cart));
+
+
+        } else {
+            $combination = $request->get('combination');
+            sort($combination);
+
+            $attributeValueIds = '[' . join(', ', $combination) . ']';
+
+            $productPrice = ProductPrice::query()->where('product_id', '=', $productId)->whereRaw("CAST(`product_prices`.`attributes` as char) = '$attributeValueIds'")->first();
+
+            $encrypter = app(\Illuminate\Contracts\Encryption\Encrypter::class);
+
+
+            $cart = array();
+
+            if (Cookie::has('cart')) {
+                $cartCookie = $encrypter->decrypt(Cookie::get('cart'));
+                $cart = json_decode($cartCookie);
             }
+
+            $alreadyInCart = false;
+
+            foreach ($cart as $key => $item) {
+                if ($item->product_id == $productId && $item->combination == $combination) {
+                    $item->quantity += $quantity;
+                    $cart[$key] = $item;
+                    $alreadyInCart = true;
+
+                    if ($productPrice->stock < $item->quantity) {
+                        return response('', 400);
+                    }
+                }
+            }
+
+            if ($alreadyInCart == false) {
+                $cart[] = [
+                    'product_id' => $productId,
+                    'quantity' => $quantity,
+                    'combination' => $combination
+                ];
+
+                if ($productPrice->stock < $quantity) {
+                    return response('', 400);
+                }
+            }
+
+
+            $cookieJar->queue(cookie('cart', json_encode($cart), 30));
+
+            return $encrypter->encrypt(json_encode($cart));
         }
 
-
-        $cookieJar->queue(cookie('cart', json_encode($cart), 30));
-
-        return $encrypter->encrypt(json_encode($cart));
 
     }
 
@@ -74,31 +104,35 @@ class ProductController extends BaseController
     {
         $item = json_decode($request->get('item'));
 
-
-
         $encrypter = app(\Illuminate\Contracts\Encryption\Encrypter::class);
-
 
         $cart = array();
 
-        if(Cookie::has('cart')) {
+        if (Cookie::has('cart')) {
             $cartCookie = $encrypter->decrypt(Cookie::get('cart'));
             $cart = json_decode($cartCookie);
         }
 
-        $array = array($item);
 
-        $combinationIds = array();
+        if (!$item->gift) {
+            $combinationIds = array();
 
-        foreach ($item->combinationInfo as $combinationItem) {
-            $combinationIds[] = $combinationItem->id;
+            foreach ($item->combinationInfo as $combinationItem) {
+                $combinationIds[] = $combinationItem->id;
+            }
         }
 
-        foreach($cart as $key => $currentItem) {
-            if($currentItem->combination == $combinationIds) {
-                unset($cart[$key]);
-                $cart = array_values($cart);
-                break;
+        foreach ($cart as $key => $currentItem) {
+            if ($currentItem->product_id == $item->product_id) {
+                if ($item->gift && $item->email == $currentItem->email) {
+                    unset($cart[$key]);
+                    $cart = array_values($cart);
+                    break;
+                } else if (!$item->gift && $currentItem->combination == $combinationIds) {
+                    unset($cart[$key]);
+                    $cart = array_values($cart);
+                    break;
+                }
             }
         }
 

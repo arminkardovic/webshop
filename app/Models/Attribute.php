@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
+use Lang;
 
 class Attribute extends Model
 {
@@ -21,7 +22,8 @@ class Attribute extends Model
     // protected $guarded = ['id'];
     protected $fillable = [
     	'type',
-	 	'name'
+	 	'name',
+        'name_sr'
  	];
     // protected $hidden = [];
     // protected $dates = [];
@@ -49,6 +51,11 @@ class Attribute extends Model
 	| FUNCTIONS
 	|--------------------------------------------------------------------------
 	*/
+
+    public function getNameTranslatedAttribute()
+    {
+        return Lang::locale() == 'en' ? $this->name : $this->name_sr;
+    }
 
     /*
 	|--------------------------------------------------------------------------

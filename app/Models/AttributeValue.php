@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
+use Lang;
 
 class AttributeValue extends Model
 {
@@ -21,7 +22,8 @@ class AttributeValue extends Model
     // protected $guarded = ['id'];
     protected $fillable = [
     	'attribute_id',
-    	'value'
+    	'value',
+        'value_sr'
 	];
 
     public function attribute()
@@ -37,6 +39,11 @@ class AttributeValue extends Model
 	| FUNCTIONS
 	|--------------------------------------------------------------------------
 	*/
+
+    public function getValueTranslatedAttribute()
+    {
+        return Lang::locale() == 'en' ? $this->value : $this->value_sr;
+    }
 
     /*
 	|--------------------------------------------------------------------------

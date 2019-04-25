@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
+use Lang;
 
 class Category extends Model
 {
@@ -23,6 +24,8 @@ class Category extends Model
         'parent_id',
         'name',
         'slug',
+        'name_sr',
+        'slug_sr',
         'lft',
         'rgt',
         'depth',
@@ -36,6 +39,17 @@ class Category extends Model
 	| FUNCTIONS
 	|--------------------------------------------------------------------------
 	*/
+
+
+    public function getNameTranslatedAttribute()
+    {
+        return Lang::locale() == 'en' ? $this->name : $this->name_sr;
+    }
+
+    public function getDescriptionTranslatedAttribute()
+    {
+        return Lang::locale() == 'en' ? $this->slug : $this->slug_sr;
+    }
 
     /*
 	|--------------------------------------------------------------------------

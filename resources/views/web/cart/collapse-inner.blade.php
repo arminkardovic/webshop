@@ -8,8 +8,10 @@
         @foreach($cart as $key => $item)
             @php($total += $item->quantity * $item->price)
             <li id="li-{{$key}}">
-                <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : \Illuminate\Support\Facades\URL::to('img/blackgirl.jpg')}}"
-                     alt="">
+                <a href="{{route("product.single", ["id"=>$item->product_id])}}">
+                    <img src="{{isset($item->featureImage) && $item->featureImage != '' ? $item->featureImage : \Illuminate\Support\Facades\URL::to('img/blackgirl.jpg')}}"
+                         alt="">
+                </a>
                 <div class="carpet-item-content">
 
                     <div class="heading">
@@ -26,10 +28,16 @@
 
                     <h4>{{Lang::locale() == 'en' ? $item->product_name : $item->product_name_sr}}</h4>
 
-                    @foreach($item->combinationInfo as $combinationInfoItem)
-                        <span class="attribute">{{$combinationInfoItem->name}}: <span
-                                    class="value">{{$combinationInfoItem->value}}</span></span>
-                    @endforeach
+                    @isset($item->combinationInfo)
+                        @foreach($item->combinationInfo as $combinationInfoItem)
+                            <span class="attribute">{{Lang::locale() == 'en' ? $combinationInfoItem->name : $combinationInfoItem->name_sr}}: <span
+                                        class="value">{{Lang::locale() == 'en' ? $combinationInfoItem->value : $combinationInfoItem->value_sr}}</span></span>
+                        @endforeach
+                    @endisset
+                    @isset($item->email)
+                        <span class="attribute">{{trans('user.email')}}: <span
+                                    class="value">{{$item->email}}</span></span>
+                    @endisset
 
 
                 </div>

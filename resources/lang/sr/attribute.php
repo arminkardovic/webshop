@@ -7,6 +7,7 @@ return [
 	'attribute_set'		=> 'Attribute Set',
 	'attribute_sets'	=> 'Attribute Sets',
 	'name'				=> 'Name',
+    'name_sr'			=> 'Name (Serbian)',
 	'type'				=> 'Type',
 	'text'				=> 'Text',
 	'textarea'			=> 'Text Area',

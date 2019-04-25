@@ -44,7 +44,7 @@ class CheckoutController extends BaseController
 
         $coupon = CouponCode::where('code', $code)->first();
 
-        if($coupon == null) {
+        if ($coupon == null) {
             return view('web.checkout.index', [
                 'cart' => $cart,
                 'couponWarning' => 'Coupon not found.'
@@ -107,39 +107,52 @@ class CheckoutController extends BaseController
 
 
         foreach ($cart as $key => $item) {
-            $joinedCombination = '[' . join(', ', $item->combination) . ']';
-
-            $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
-
-            $item->price = $price->price;
-            $item->stock = $price->stock;
-            $item->sku = $price->sku;
-            $item->combinationInfo = array();
-
             foreach ($products as $product) {
                 if ($product->id == $item->product_id) {
                     $item->product_name = $product->name;
                     $item->product_name_sr = $product->name_sr;
                     $item->featureImage = $product->featureImage;
+                    $item->gift = $product->gift;
+                    if ($item->gift) {
+                        $item->price = $product->price;
+                        $item->stock = 1;
+                        $item->sku = '00000000000';
+                    }
                     break;
                 }
             }
 
-            foreach ($attributes as $attribute) {
-                /** @var Attribute $attribute */
-                foreach ($attribute->values as $value) {
-                    foreach ($item->combination as $combinationItem) {
-                        if ($combinationItem == $value->id) {
-                            $combinationInfoItem = new \stdClass();
-                            $combinationInfoItem->id = $value->id;
-                            $combinationInfoItem->name = $attribute->name;
-                            $combinationInfoItem->value = $value->value;
-                            $item->combinationInfo[] = $combinationInfoItem;
-                            break;
+            if (!$item->gift) {
+                $joinedCombination = '[' . join(', ', $item->combination) . ']';
+
+
+                $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
+
+                $item->price = $price->price;
+                $item->stock = $price->stock;
+                $item->sku = $price->sku;
+                $item->combinationInfo = array();
+
+
+                foreach ($attributes as $attribute) {
+                    /** @var Attribute $attribute */
+                    foreach ($attribute->values as $value) {
+                        foreach ($item->combination as $combinationItem) {
+                            if ($combinationItem == $value->id) {
+                                $combinationInfoItem = new \stdClass();
+                                $combinationInfoItem->id = $value->id;
+                                $combinationInfoItem->name = $attribute->name;
+                                $combinationInfoItem->name_sr = $attribute->name_sr;
+                                $combinationInfoItem->value = $value->value;
+                                $combinationInfoItem->value_sr = $value->value_sr;
+                                $item->combinationInfo[] = $combinationInfoItem;
+                                break;
+                            }
                         }
                     }
                 }
             }
+
 
             $cart[$key] = $item;
         }
@@ -160,11 +173,15 @@ class CheckoutController extends BaseController
             $cart = json_decode($cart);
 
             foreach ($cart as $item) {
-                $joinedCombination = '[' . join(', ', $item->combination) . ']';
+                if(isset($item->email)) {
+                    $cartTotal += Product::findOrFail($item->product_id)->price;
+                }else{
+                    $joinedCombination = '[' . join(', ', $item->combination) . ']';
 
-                $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
+                    $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
 
-                $cartTotal += $price->price * $item->quantity;
+                    $cartTotal += $price->price * $item->quantity;
+                }
             }
         }
 
@@ -176,7 +193,7 @@ class CheckoutController extends BaseController
     {
         $cart = $this->getCartObject();
 
-        if(sizeof($cart) == 0) {
+        if (sizeof($cart) == 0) {
             return back();
         }
 
@@ -185,19 +202,31 @@ class CheckoutController extends BaseController
         $totalPrice = 0;
 
         foreach ($cart as $key => $item) {
-            $item->quantity = (int) $request->get("quantity-$key");
+            if ($item->gift) {
+                $item->email = $request->get("email-$key");
+            } else {
+                $item->quantity = (int)$request->get("quantity-$key");
+                if ($item->quantity > $item->stock) {
+                    return back()->with('warning', 'One of the items has ran out of stock.');
+                }
+            }
             $cart[$key] = $item;
 
-            if ($item->quantity > $item->stock) {
-                return back()->with('warning', 'One of the items has ran out of stock.');
-            }
 
             $attributes = array();
 
-            foreach ($item->combinationInfo as $combinationInfoItem) {
+
+            if(!$item->gift) {
+                foreach ($item->combinationInfo as $combinationInfoItem) {
+                    $attribute = array();
+                    $attribute['name'] = $combinationInfoItem->name;
+                    $attribute['value'] = $combinationInfoItem->value;
+                    $attributes[] = $attribute;
+                }
+            }else{
                 $attribute = array();
-                $attribute['name'] = $combinationInfoItem->name;
-                $attribute['value'] = $combinationInfoItem->value;
+                $attribute['name'] = 'email';
+                $attribute['value'] = $item->email;
                 $attributes[] = $attribute;
             }
 
@@ -208,7 +237,7 @@ class CheckoutController extends BaseController
                 'sku' => $item->sku,
                 'name' => $item->product_name,
                 'name_sr' => $item->product_name_sr,
-                'attributes'    => json_encode($attributes)
+                'attributes' => json_encode($attributes)
             ];
 
             $totalPrice += $item->price * $item->quantity;
@@ -224,7 +253,7 @@ class CheckoutController extends BaseController
         $order->total_shipping = $shippingPrice;
         $order->save();
 
-        foreach($orderItems as $key => $item) {
+        foreach ($orderItems as $key => $item) {
             $item['order_id'] = $order->id;
             $orderItems[$key] = $item;
         }
@@ -234,9 +263,11 @@ class CheckoutController extends BaseController
         $cookie = Cookie::forget('cart');
 
         foreach ($cart as $item) {
-            $joinedCombination = '[' . join(', ', $item->combination) . ']';
-            $price = DB::table('product_prices')->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")
-                ->where('product_id', '=', $item->product_id)->decrement('stock', $item->quantity);
+            if(!$item->gift) {
+                $joinedCombination = '[' . join(', ', $item->combination) . ']';
+                DB::table('product_prices')->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")
+                    ->where('product_id', '=', $item->product_id)->decrement('stock', $item->quantity);
+            }
         }
 
 

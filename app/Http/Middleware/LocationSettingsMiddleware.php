@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App;
 use App\Models\LocationSettings;
+use App\Models\Product;
 use App\Models\ProductPrice;
 use App\User;
 use App\Utils\PriceUtils;
@@ -86,11 +87,15 @@ class LocationSettingsMiddleware
             $cart = json_decode($cart);
 
             foreach ($cart as $item) {
-                $joinedCombination = '[' . join(', ', $item->combination) . ']';
+                if(isset($item->email)) {
+                    $cartTotal += Product::findOrFail($item->product_id)->price;
+                }else{
+                    $joinedCombination = '[' . join(', ', $item->combination) . ']';
 
-                $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
+                    $price = ProductPrice::query()->whereRaw("CAST(`product_prices`.`attributes` as char) = '$joinedCombination'")->where('product_id', '=', $item->product_id)->first();
 
-                $cartTotal += $price->price * $item->quantity;
+                    $cartTotal += $price->price * $item->quantity;
+                }
             }
         }
 
