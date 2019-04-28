@@ -37,12 +37,9 @@ class Attribute extends Model
     {
         parent::boot();
 
-    	static::deleting(function($model) {
-	        if (count($model->sets) == 0) {
+    	static::deleting(function(Attribute $model) {
+	            $model->sets()->sync([]);
     	        $model->values()->delete();
-    		} else {
-    			return $model;
-    		}
         });
     }
 

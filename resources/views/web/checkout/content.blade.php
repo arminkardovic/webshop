@@ -43,6 +43,14 @@
                                 <span>POST EXPRESS</span>
                             </label>
                         </div>
+                        <div class="form-group">
+                            <label for="location_settings_id">Ship to:</label>
+                            <select id="location_settings_id" data-show-content="true" name="location_settings_id" class="form-control border">
+                                @foreach($countries as $country)
+                                    <option {{Auth::user()->location_settings_id == $country->id ? ' selected' : ''}} value="{{$country->id}}">{{$country->country}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
 

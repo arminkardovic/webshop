@@ -54,9 +54,11 @@ class Product extends Model
     {
         parent::boot();
 
-        static::deleting(function ($model) {
+        static::deleting(function (Product $model) {
             $model->attributes()->detach();
+            $model->prices()->delete();
 
+            $model->specificPrice()->delete();
             // Delete product images
             $disk = 'products';
 
@@ -121,7 +123,7 @@ class Product extends Model
 
     public function specificPrice()
     {
-        return $this->belongsTo('App\Models\SpecificPrice');
+        return $this->hasOne('App\Models\SpecificPrice');
     }
 
     public function prices()

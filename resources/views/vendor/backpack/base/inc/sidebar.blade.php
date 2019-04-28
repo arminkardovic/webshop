@@ -88,6 +88,10 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/order-statuses') }}"><i
                                     class="fa fa-list-ul"></i> <span>{{ trans('order.order_statuses') }}</span></a></li>
                 @endcan
+                @can('list_currencies')
+                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/exchange-rates') }}"><i
+                                    class="fa fa-list-ul"></i> <span>{{ trans('currency.exchange_rate') }}</span></a></li>
+                @endcan
             <!--
           @can('list_cart_rules')
                 <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/cart-rules') }}"><i class="fa fa-shopping-cart"></i> <span>{{ trans('cartrule.cart_rules') }}</span></a></li>

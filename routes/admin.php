@@ -11,6 +11,7 @@
 Route::post('attribute-sets/list-attribute-combinations', ['as' => 'getAttrCombinationsBySetId', 'uses' => 'AttributeSetCrudController@ajaxGetAttributesCombinations']);
 Route::post('products/create-prices-table', ['as' => 'getCreateProductPricesTable', 'uses' => 'ProductCrudController@getCreateProductPricesTable']);
 Route::post('products/update-prices-table', ['as' => 'getUpdateProductPricesTable', 'uses' => 'ProductCrudController@getUpdateProductPricesTable']);
+Route::get('exchange-rates', ['as' => 'exchange.rates.index', 'uses' => 'ExchangeRatesController@index']);
 
 CRUD::resource('categories', 'CategoryCrudController');
 CRUD::resource('currencies', 'CurrencyCrudController');
@@ -34,5 +35,6 @@ CRUD::resource('gifts', 'GiftCrudController');
 Route::post('products/clone', ['as' => 'clone.product', 'uses' => 'ProductCrudController@cloneProduct']);
 // Update Order Status
 Route::post('orders/update-status', ['as' => 'updateOrderStatus', 'uses' => 'OrderCrudController@updateStatus']);
+Route::post('exchange-rates-update', ['as' => 'exchange-rates-update', 'uses' => 'ExchangeRatesController@update']);
 
 

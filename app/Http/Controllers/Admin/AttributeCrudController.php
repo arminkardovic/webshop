@@ -152,6 +152,7 @@ class AttributeCrudController extends CrudController
         // Init attributeValue array
         $attributeValue = [];
 
+
         switch ($request->type) {
             case 'text':
             case 'textarea':
@@ -164,22 +165,12 @@ class AttributeCrudController extends CrudController
 
             case 'multiple_select':
             case 'dropdown':
-                $value = '';
-                $valueSr = '';
-                $i = 1;
-                dd($request->all());
-                foreach ($request->option as $option) {
-                    if ($i % 2 == 0) {
-                        $valueSr = $option;
+                foreach ($request->option as $i => $option) {
                         $attributeValue[] = [
                             'attribute_id' => $entryId,
-                            'value' => $value,
-                            'value_sr' => $valueSr
+                            'value' => $option,
+                            'value_sr' => $request->get('sroption')[$i - 1]
                         ];
-                    } else {
-                        $value = $option;
-                    }
-                    $i++;
                 }
                 break;
 
@@ -197,9 +188,7 @@ class AttributeCrudController extends CrudController
                 break;
         }
 
-
-        dd($attributeValue);
-        $insert_attribute_values = AttributeValue::insert($attributeValue);
+        AttributeValue::insert($attributeValue);
 
         return $redirect_location;
     }
@@ -220,7 +209,7 @@ class AttributeCrudController extends CrudController
             case 'dropdown':
                 if (isset($request->current_option)) {
                     foreach ($request->current_option as $key => $current_option) {
-                        $attributeValue->where('id', $key)->update(['value' => $current_option]);
+                        $attributeValue->where('id', $key)->update(['value' => $current_option, 'value_sr' => $request->get('sr_current_option')[$key]]);
                     }
                 }
 

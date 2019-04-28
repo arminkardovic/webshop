@@ -12,6 +12,7 @@ use App\Http\Controllers\BaseController;
 use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\CouponCode;
+use App\Models\LocationSettings;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -30,9 +31,11 @@ class CheckoutController extends BaseController
     public function index(Request $request)
     {
         $cart = $this->getCartObject();
+        $countries = LocationSettings::query()->orderBy('country')->get();
 
         return view('web.checkout.index', [
-            'cart' => $cart
+            'cart' => $cart,
+            'countries' => $countries
         ]);
     }
 

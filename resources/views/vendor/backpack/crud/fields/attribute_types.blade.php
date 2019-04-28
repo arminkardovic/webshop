@@ -36,6 +36,8 @@
                         <div class="input-group">
                             <input type="text" name="current_option[{{$option->id}}]" class="form-control"
                                    value="{{ $option->value }}" placeholder="Name">
+                            <input type="text" name="sr_current_option[{{$option->id}}]" class="form-control"
+                                   value="{{ $option->value_sr }}" placeholder="Name (Serbian)">
                             <span class="input-group-addon">
                   <i class="fa fa-ban"></i>
                 </span>
@@ -115,9 +117,10 @@
                 option_template += '<label>#{{ trans('attribute.option') }}</label>'
                 option_template += '<div class="input-group">'
                 option_template += '<input type="text" name="option[]" class="form-control" placeholder="Name"/>'
-                option_template += '<input type="text" name="optionsr[]" class="form-control" placeholder="Name (Serbian)"/>'
+                option_template += '<input type="text" name="sroption[]" class="form-control" placeholder="Name (Serbian)"/>'
                 option_template += '<span class="input-group-addon"><a href="javascript:void(0)" class="remove-option"><i class="fa fa-remove"></i></a></span>'
                 option_template += '</div>'
+
                 option_template += '</div>'
 
                 // Append option
