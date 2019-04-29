@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AttributeRequest as StoreRequest;
 use App\Http\Requests\AttributeUpdateRequest as UpdateRequest;
+use App\Models\Attribute;
 use App\Models\AttributeValue;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
@@ -166,11 +167,11 @@ class AttributeCrudController extends CrudController
             case 'multiple_select':
             case 'dropdown':
                 foreach ($request->option as $i => $option) {
-                        $attributeValue[] = [
-                            'attribute_id' => $entryId,
-                            'value' => $option,
-                            'value_sr' => $request->get('sroption')[$i - 1]
-                        ];
+                    $attributeValue[] = [
+                        'attribute_id' => $entryId,
+                        'value' => $option,
+                        'value_sr' => $request->get('sroption')[$i - 1]
+                    ];
                 }
                 break;
 
@@ -207,21 +208,24 @@ class AttributeCrudController extends CrudController
 
             case 'multiple_select':
             case 'dropdown':
+                $keys = [];
                 if (isset($request->current_option)) {
                     foreach ($request->current_option as $key => $current_option) {
                         $attributeValue->where('id', $key)->update(['value' => $current_option, 'value_sr' => $request->get('sr_current_option')[$key]]);
+                        $keys[] = $key;
                     }
                 }
+
+                $attributeValue->where("attribute_id", "=", $request->id)->whereNotIn("id", $keys)->delete();
 
                 if (isset($request->option)) {
                     foreach ($request->option as $option) {
                         $attribute_values[] = ['attribute_id' => $request->id, 'value' => $option];
                     }
-
                     $insert_new_option = $attributeValue->insert($attribute_values);
                 }
-                break;
 
+                break;
             case 'media':
                 if (starts_with($request->media, 'data:image')) {
                     // 0. Get current image filename

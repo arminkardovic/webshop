@@ -39,7 +39,8 @@
                             <input type="text" name="sr_current_option[{{$option->id}}]" class="form-control"
                                    value="{{ $option->value_sr }}" placeholder="Name (Serbian)">
                             <span class="input-group-addon">
-                  <i class="fa fa-ban"></i>
+                  <!-- <i class="fa fa-ban"></i> -->
+                                  <a href="javascript:void(0)" class="remove-option"><i class="fa fa-remove"></i></a>
                 </span>
                         </div>
                     </div>
