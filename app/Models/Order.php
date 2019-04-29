@@ -34,8 +34,8 @@ class Order extends Model
         'total_shipping_tax',
         'total',
         'total_tax',
-        'meta'
-
+        'meta',
+        'reclamation'
     ];
     // protected $hidden = [];
     // protected $dates = [];
