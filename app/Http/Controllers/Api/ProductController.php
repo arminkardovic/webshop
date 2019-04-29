@@ -21,8 +21,9 @@ class ProductController extends BaseController
         $productId = $request->get('product_id');
         $quantity = $request->get('quantity');
 
-        if ($request->has('email')) {
-            $email = $request->get('email');
+        if ($request->has('from')) {
+            $from = $request->get('from');
+            $message = $request->get('message');
 
             $encrypter = app(\Illuminate\Contracts\Encryption\Encrypter::class);
 
@@ -38,7 +39,8 @@ class ProductController extends BaseController
             $cart[] = [
                 'product_id' => $productId,
                 'quantity' => $quantity,
-                'email' => $email
+                'from' => $from,
+                'message' => $message
             ];
 
 

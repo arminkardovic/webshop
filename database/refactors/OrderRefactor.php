@@ -18,5 +18,11 @@ class OrderRefactor
             });
         }
 
+        if (!Schema::hasColumn('orders', 'reclamation')) {
+            Schema::table('orders', function (Blueprint $table) {
+                $table->longText('reclamation')->nullable()->default(null);
+            });
+        }
+
     }
 }

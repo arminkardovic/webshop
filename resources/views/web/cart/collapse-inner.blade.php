@@ -34,11 +34,14 @@
                                         class="value">{{Lang::locale() == 'en' ? $combinationInfoItem->value : $combinationInfoItem->value_sr}}</span></span>
                         @endforeach
                     @endisset
-                    @isset($item->email)
-                        <span class="attribute">{{trans('user.email')}}: <span
-                                    class="value">{{$item->email}}</span></span>
+                    @isset($item->from)
+                        <span class="attribute">{{trans('gift_card.buyer_full_name')}}: <span
+                                    class="value">{{$item->from}}</span></span>
                     @endisset
-
+                    @isset($item->message)
+                        <span class="attribute">{{trans('gift_card.message')}}: <span
+                                    class="value">{{$item->message}}</span></span>
+                    @endisset
 
                 </div>
             </li>

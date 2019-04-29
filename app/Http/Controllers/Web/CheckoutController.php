@@ -12,6 +12,7 @@ use App\Http\Controllers\BaseController;
 use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\CouponCode;
+use App\Models\Gift;
 use App\Models\LocationSettings;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -176,7 +177,7 @@ class CheckoutController extends BaseController
             $cart = json_decode($cart);
 
             foreach ($cart as $item) {
-                if(isset($item->email)) {
+                if(isset($item->from)) {
                     $cartTotal += Product::findOrFail($item->product_id)->price;
                 }else{
                     $joinedCombination = '[' . join(', ', $item->combination) . ']';
@@ -206,7 +207,8 @@ class CheckoutController extends BaseController
 
         foreach ($cart as $key => $item) {
             if ($item->gift) {
-                $item->email = $request->get("email-$key");
+                $item->from = $request->get("from-$key");
+                $item->message = $request->get("message-$key");
             } else {
                 $item->quantity = (int)$request->get("quantity-$key");
                 if ($item->quantity > $item->stock) {
@@ -228,9 +230,25 @@ class CheckoutController extends BaseController
                 }
             }else{
                 $attribute = array();
-                $attribute['name'] = 'email';
-                $attribute['value'] = $item->email;
+                $attribute['name'] = 'From';
+                $attribute['value'] = $item->from;
                 $attributes[] = $attribute;
+                $attribute2 = array();
+                $attribute2['name'] = 'Message';
+                $attribute2['value'] = $item->message;
+                $attributes[] = $attribute2;
+
+                $gift = new Gift([
+                    'from' => $item->from,
+                    'message' => $item->message,
+                    'value' => $item->price,
+                    'remaining' => $item->price,
+                    'code'      => str_random(16)
+                ]);
+
+                $gift->save();
+
+                //TODO slanje PDF emaila sa gift codom
             }
 
             $orderItems[] = [

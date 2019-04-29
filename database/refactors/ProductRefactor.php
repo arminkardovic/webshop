@@ -30,5 +30,16 @@ class ProductRefactor
                 $table->integer('attribute_set_id')->unsigned()->nullable()->default(null)->change();
             });
         }
+
+        if(\App\Models\Category::where('slug', '=', 'gift-packets')->first() == null) {
+            $category = new \App\Models\Category([
+                'name'      => 'Gift packets',
+                'name_sr'   => 'Poklon paketi',
+                'slug'      => 'gift-packets',
+                'slug_sr'   => 'poklon-paketi',
+                'attribute_set_id' => 1
+            ]);
+            $category->save();
+        }
     }
 }

@@ -25,7 +25,9 @@ class CategoryController extends BaseController
         }
         $products = $category->allProducts();
 
-        if($category->slug != 'gift') {
+        $attributes = array();
+
+        if($category->slug != 'gift-packets') {
             /** @var */
             $products->whereHas('prices', function ($q) use ($request) {
 
@@ -54,6 +56,10 @@ class CategoryController extends BaseController
 
                 }
             });
+
+            $attributes = Attribute::with('values')->whereHas('sets', function ($q) use ($category) {
+                $q->where('id', $category->attribute_set_id);
+            })->get();
         }
 
         if ($request->has('price')) {
@@ -71,9 +77,7 @@ class CategoryController extends BaseController
 
 //        dd($products);
 
-        $attributes = Attribute::with('values')->whereHas('sets', function ($q) use ($category) {
-            $q->where('id', $category->attribute_set_id);
-        })->get();
+
 
         return view("web.category.index", [
             "category" => $category,

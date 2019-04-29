@@ -66,13 +66,28 @@
                             <span class="value">{{\App\Utils\PriceUtils::formattedPrice($item->price)}}</span>
                         </td>
                     </tr>
-                    <tr>
-                        <td>@isset($item->email)
-                                {{trans('user.email')}}: <input type="text" class="input-text text form-control"
-                                       name="email-{{$key}}"
-                                       value="{{$item->email}}" title="Email">
-                            @endisset</td>
-                    </tr>
+
+                    @isset($item->from)
+                        <tr>
+                            <td colspan="3">
+                                {{trans('gift_card.buyer_full_name')}}: <input type="text"
+                                                                               class="input-text text form-control"
+                                                                               name="from-{{$key}}"
+                                                                               value="{{$item->from}}" title="From">
+                            </td>
+                        </tr>
+                    @endisset
+                    @isset($item->message)
+                        <tr>
+                            <td colspan="3">
+                                {{trans('gift_card.message')}}: <input type="text"
+                                                                       class="input-text text form-control"
+                                                                       name="message-{{$key}}"
+                                                                       value="{{$item->message}}" title="Message">
+                            </td>
+                        </tr>
+                    @endisset
+
                 @endforeach
 
                 </tbody>

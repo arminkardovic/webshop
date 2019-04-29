@@ -87,7 +87,7 @@ class LocationSettingsMiddleware
             $cart = json_decode($cart);
 
             foreach ($cart as $item) {
-                if(isset($item->email)) {
+                if(isset($item->from)) {
                     $cartTotal += Product::findOrFail($item->product_id)->price;
                 }else{
                     $joinedCombination = '[' . join(', ', $item->combination) . ']';

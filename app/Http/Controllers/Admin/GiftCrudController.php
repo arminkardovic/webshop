@@ -341,7 +341,7 @@ class GiftCrudController extends CrudController
 
         $productGroup = $productGroup->create();
 
-        $category = Category::where('name', 'Gift')->first();
+        $category = Category::where('slug', 'gift-packets')->first();
 
         $request->merge([
             'group_id' => $productGroup->id,

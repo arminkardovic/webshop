@@ -38,8 +38,11 @@
                         </p>
 
                         <form class="cart" id="add_to_cart_form" method="post" enctype="multipart/form-data">
-                            <div class="email">
-                                Enter email of user to gift: <input type="text" class="input-text text" title="Email" name="email">
+                            <div class="from">
+                                Gift from: <input type="text" class="input-text text" title="From" name="from">
+                            </div>
+                            <div class="message">
+                                Message: <input type="text" class="input-text text" title="Message" name="message">
                             </div>
                             <button type="submit" name="add-to-cart" value="283"
                                     class="single_add_to_cart_button button alt">dodaj u korpu
@@ -95,7 +98,8 @@
             $("#add_to_cart_form").submit(function (event) {
                 event.preventDefault();
                 var productId = {{$product->id}};
-                var email = $("input[name=email]").val();
+                var from = $("input[name=from]").val();
+                var message = $("input[name=message]").val();
                 var combinationIds = [];
 
                 $.ajax({
@@ -104,7 +108,8 @@
                     data: {
                         product_id: productId,
                         combination: combinationIds,
-                        email: email,
+                        from: from,
+                        message: message,
                         quantity: 1
                     },
                     xhrFields: {
