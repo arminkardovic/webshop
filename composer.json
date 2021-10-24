@@ -14,7 +14,6 @@
         "laravel/socialite": "3.2",
         "backpack/menucrud": "^1.0",
         "backpack/pagemanager": "^1.1",
-        "barryvdh/laravel-ide-helper": "^2.6",
         "torann/geoip": "^1.0"
     },
     "require-dev": {
@@ -25,7 +24,8 @@
         "symfony/dom-crawler": "3.1.*",
         "laracasts/generators": "dev-master as 1.1.4",
         "backpack/generators": "^1.1",
-        "filp/whoops": "~2.0"
+        "filp/whoops": "~2.0",
+        "barryvdh/laravel-ide-helper": "^2.6"
     },
     "autoload": {
         "classmap": [
